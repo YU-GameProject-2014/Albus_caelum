@@ -77,3 +77,4 @@ function drawButtonCaption(num, caption, size)
 @locate x=40 y=250
 @button graphic="start.png" exp="kag.shutdown()"
 @buttoncaption num=3 caption="EXIT" size=24
+
