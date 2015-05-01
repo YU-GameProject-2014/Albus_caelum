@@ -62,9 +62,9 @@ function drawButtonCaption(num, caption, size)
 @button graphic="start.png" storage="system/The_Unit/The_Unit.ks" target=*The_Unit
 @buttoncaption num=0 caption="The単位" size=18
 
-;テストの妖精リンク
+;レポートの妖精リンク
 @locate x=40 y=150
-@button graphic="start.png" storage="system/TestFairy/TestFairy.ks" target=*TestFairy
+@button graphic="start.png" storage="system/ReportFairy/ReportFairy.ks" target=*ReportFairy
 @buttoncaption num=1 caption="テストの妖精" size=18
 
 ;The自販機リンク
