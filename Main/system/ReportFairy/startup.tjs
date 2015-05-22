@@ -1,0 +1,85 @@
+class Fairy{
+	var  x,y;
+	var enable;
+	var lay;
+	function Fairy(wnd,lay){
+		this.lay=new Layer(wnd,lay);
+		this.lay.loadImages("image/Fairy.png");
+		this.lay.setSizeToImageSize();
+		this.lay.visible=false;
+		this.lay.onForcus = function(focused, direction){System.inform(focused.window.width);};
+		enable=0;
+	}
+}
+
+
+class Fairy_Maneger{    
+	var fairy;
+	var x,y;			//妖精の初期出現位置
+	var width,height;	//ウィンドウのサイズ
+	var rand;
+	var way;
+	
+	function Fairy_Maneger(wnd,lay){
+		width=lay.width;
+		height=lay.height;
+		rand = new Math.RandomGenerator();
+		
+		this.timer = new Timer(this, "action");
+		this.timer.interval = 1000;
+		timer.enabled = true;
+		fairy=new Array();
+		for(var i=0; i<10;i++){
+			fairy[i]=new Fairy(wnd,lay);
+		}
+	}
+
+	//一定時間ごとに妖精を出現させる
+	function action(ev){
+		for(var i=0; i<10; i++){
+    		if(fairy[i].enable==0){
+    			PopPosition();
+    			fairy[i].enable=1;
+    			fairy[i].lay.setPos(x, y);
+    			fairy[i].lay.visible=true;
+				break;
+			}
+    	}
+    }
+    
+    //妖精のポップ位置を定める
+	function PopPosition(){
+		way=(int)(rand.random()*4);//0:上　1:右　2:下　3:左
+		if(way==0){
+			x=(int)(rand.random()*width);
+			y=0;
+		}else if(way==1){
+			x=width-10;
+			y=(int)(rand.random()*height);
+		}else if(way==2){
+			x=(int)(rand.random()*width);
+			y=height-10;
+		}else if(way==3){
+			x=0;
+			y=(int)(rand.random()*height);
+		}
+	}
+}
+
+
+var wnd = new Window();
+wnd.width=640;
+wnd.height=480;
+var lay = new Layer(wnd, null);
+lay.width=wnd.innerWidth;
+lay.height=wnd.innerHeight;
+lay.fillRect(0,0,lay.width,lay.height,0xFFFFFFFF);
+
+
+
+var f_mane=new Fairy_Maneger(wnd,lay);
+
+
+var dic = new Dictionary();
+lay.visible=true;
+wnd.visible=true;
