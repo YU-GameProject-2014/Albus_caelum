@@ -1,61 +1,103 @@
-class ReportFairyRayer extends Layer{
-    var frame_layer;
-
-    function ReportFairyRayer(wnd, lay){
-        super.Layer(wnd, lay);
-        this.frame_layer = new ReportFrameLayer(wnd, this);
-        this.focusable = true;
-        this.focus();
-        this.frame_layer.visible=true;
+class ReportFairyGame{
+    var mainLayer;
+    var reportUnit;
+    var fairyUnit;
+    var frameUnit;
+    
+    var fairyManager; //FairyManager
+    var fairies; //array;
+    var maxFairyNum;
+    
+    function ReportFairyGame(wnd, lay){
+        this.mainLayer  = new RFGLayer(wnd, lay, this);
+        //this.reportUnit = new RFGReportLayer(wnd, this.mainLayer);//未実装
+        this.fairyUnit  = new Layer(wnd, this.mainLayer);//これもサブクラスにしたほうがよい可能性が
+        this.fairyUnit.width = this.mainLayer.width;
+        this.fairyUnit.height = this.mainLayer.height;
+        this.fairyUnit.visible = true;
+        this.frameUnit  = new RFGFrameLayer(wnd, this.mainLayer);
+        
+        this.fairyUnit.bringToFront();
+        this.frameUnit.bringToFront();
+        
+        this.fairyManager = new RFGFairyManeger(wnd, this.fairyUnit);
     }
     
+    
+    /*
+     * キー操作はReportFairyが一元管理します
+     */
     function onKeyDown(key, shift, process=true){
-        this.frame_layer.visible=true;
-        this.frame_layer.bringToFront();
+        this.frameUnit.visible=true;
     }
 
     function onKeyUp(key, shift, process=true){
-        this.frame_layer.visible=false;
+        this.frameUnit.visible=false;
     }
-
+    
 }
 
-class Fairy{
-	var  x, y;    //座標
-	var  vx, vy;  //速度ベクトル
-	var enable;   //生死
-	var lay;      //FairyLayer
-	var timer;    //妖精タイマー
-	
-	function Fairy(wnd,lay){
-		this.lay=new FairyLayer(wnd, lay, this);
-		this.setVect(0, 0);
-		enable=0;
-		this.timer = new Timer(this, "action");
-		this.timer.interval = 10;
-		this.timer.enabled = true;
-	}
-	
-	function onClick(x, y){
-	    this.lay.opacity = 128;
-	}
-	
-	function move(dx, dy){
-	    this.x += dx;
-	    this.y += dy;
-	    this.lay.setPos(this.x, this.y);
-	    
-	    //画面からはみ出たら消滅
-	    if (this.lay.left + this.lay.width < 0 || this.lay.top  + this.lay.height < 0 ||
-	        this.lay.parent.width  < this.lay.left|| this.lay.parent.height < this.lay.top
-	    ){
-	        this.enable = 0;
-	    }
-	}
+class RFGLayer extends Layer{
+    var owner; //ReportFairyオブジェクト
 
-	//一定時間ごとに妖精が作動する
-	function action(ev){
-		if(this.enable) this.move(vx, vy);
+    function RFGLayer(wnd, lay, owner){
+        super.Layer(wnd, lay);
+        this.owner = owner;
+        this.width = lay.width;
+        this.height = lay.height;
+        this.focusable = true;
+        this.fillRect(0, 0, this.width, this.height, 0xFF7F7F7F);
+        this.visible=true;
+        this.focus();
+    }
+    
+    /* キー操作はReportFairyオブジェクトに委譲 */
+    function onKeyDown(key, shift, process=true){
+        this.owner.onKeyDown(key, shift, process);
+    }
+
+    /* キー操作はReportFairyオブジェクトに委譲 */
+    function onKeyUp(key, shift, process=true){
+        this.owner.onKeyUp(key, shift, process);
+    }
+}
+
+class RFGFairy{
+    var x, y;     //座標
+    var vx, vy;   //速度ベクトル
+    var enable;   //生死
+    var lay;      //FairyLayer
+    var timer;    //妖精タイマー
+    
+    function RFGFairy(wnd,lay){
+        this.lay=new RFGFairyLayer(wnd, lay, this);
+        this.setVect(0, 0);
+        enable=0;
+        this.timer = new Timer(this, "action");
+        this.timer.interval = 10;
+        this.timer.enabled = true;
+    }
+    
+    function onClick(x, y){
+        this.lay.opacity = 128;
+    }
+    
+    function move(dx, dy){
+        this.x += dx;
+        this.y += dy;
+        this.lay.setPos(this.x, this.y);
+        
+        //画面からはみ出たら消滅
+        if (this.lay.left + this.lay.width < 0 || this.lay.top  + this.lay.height < 0 ||
+            this.lay.parent.width  < this.lay.left|| this.lay.parent.height < this.lay.top
+        ){
+            this.enable = 0;
+        }
+    }
+
+    //一定時間ごとに妖精が作動する
+    function action(ev){
+        if(this.enable) this.move(vx, vy);
     }
 
     function setVect(vx, vy){
@@ -74,14 +116,14 @@ class Fairy{
 
 }
 
-class FairyLayer extends Layer{
+class RFGFairyLayer extends Layer{
     var fairy; //Fairyオブジェクト本体
 
-    function FairyLayer(wnd, lay, fairy){
+    function RFGFairyLayer(wnd, lay, fairy){
         super.Layer(wnd, lay);
         this.fairy = fairy;
-		this.loadImages("image/Fairy.png");
-		this.setSizeToImageSize();
+        this.loadImages("image/Fairy.png");
+        this.setSizeToImageSize();
     }
 
     function onClick(x, y){
@@ -90,95 +132,92 @@ class FairyLayer extends Layer{
     }
 }
 
+class RFGFairyManeger{    
+    var fairy;
+    var x,y;            //妖精の初期出現位置
+    var width,height;    //ウィンドウのサイズ
+    var rand;
+    var way;
+    var lay;//FairyUnitLayer
+    
+    function RFGFairyManeger(wnd,lay){
+        this.lay = lay;
+        width=lay.width;
+        height=lay.height;
+        rand = new Math.RandomGenerator();
+        
+        this.timer = new Timer(this, "action");
+        this.timer.interval = 250;
+        timer.enabled = true;
+        fairy=new Array();
+        for(var i=0; i<5;i++){
+            fairy[i]=new RFGFairy(wnd,lay);
+        }
+    }
 
-
-class FairyManeger{    
-	var fairy;
-	var x,y;			//妖精の初期出現位置
-	var width,height;	//ウィンドウのサイズ
-	var rand;
-	var way;
-	
-	function FairyManeger(wnd,lay){
-		width=lay.width;
-		height=lay.height;
-		rand = new Math.RandomGenerator();
-		
-		this.timer = new Timer(this, "action");
-		this.timer.interval = 250;
-		timer.enabled = true;
-		fairy=new Array();
-		for(var i=0; i<5;i++){
-			fairy[i]=new Fairy(wnd,lay);
-		}
-	}
-
-	//一定時間ごとに妖精を出現させる
-	function action(ev){
-		for(var i=0; i<5; i++){
-    		if(fairy[i].enable==0){
-    			PopPosition();
-    			invalidate fairy[i];
-    			fairy[i]=new Fairy(wnd,lay);//妖精再作成
-    			fairy[i].lay.setPos(x, y);//レイヤーの座標だけかえてもFairyオブジェクトの座標は変わらない
-    			fairy[i].x = x;//妖精の座標変更
-    			fairy[i].y = y;//妖精の座標変更
-    			fairy[i].lay.visible=true;
-    			fairy[i].setVectForCenter(3);
-    			fairy[i].enable=1;
-				break;
-			}
-    	}
+    //一定時間ごとに妖精を出現させる
+    function action(ev){
+        for(var i=0; i<5; i++){
+            if(fairy[i].enable==0){
+                popPosition();
+                invalidate fairy[i];
+                fairy[i]=new RFGFairy(wnd,this.lay);//妖精再作成
+                fairy[i].lay.setPos(x, y);//レイヤーの座標だけかえてもFairyオブジェクトの座標は変わらない
+                fairy[i].x = x;//妖精の座標変更
+                fairy[i].y = y;//妖精の座標変更
+                fairy[i].lay.visible=true;
+                fairy[i].setVectForCenter(3);//中央方向へ向かうようにする
+                fairy[i].enable=1;
+                break;
+            }
+        }
     }
     
     //妖精のポップ位置を定める
-	function PopPosition(){
-		way=rand.random32() % 4;//0:上　1:右　2:下　3:左
-		switch(way){
-		case 0:
-			x=(int)(rand.random()*width);
-			y=0;
-		    break;
-		case 1:
-			x=width-10;
-			y=(int)(rand.random()*height);
-		    break;
-		case 2:
-			x=(int)(rand.random()*width);
-			y=height-10;
-		    break;
-		case 3:
-			x=0;
-			y=(int)(rand.random()*height);
-		    break;
-		}
-	}
+    function popPosition(){
+        way=rand.random32() % 4;//0:上　1:右　2:下　3:左
+        switch(way){
+        case 0:
+            x=(int)(rand.random()*width);
+            y=0;
+            break;
+        case 1:
+            x=width-10;
+            y=(int)(rand.random()*height);
+            break;
+        case 2:
+            x=(int)(rand.random()*width);
+            y=height-10;
+            break;
+        case 3:
+            x=0;
+            y=(int)(rand.random()*height);
+            break;
+        }
+    }
 }
 
-class ReportFrameLayer extends Layer{
-    function ReportFrameLayer(wnd, lay){
+
+class RFGFrameLayer extends Layer{
+    function RFGFrameLayer(wnd, lay){
         super.Layer(wnd, lay);
-		this.loadImages("image/frame.png");
         this.width=wnd.innerWidth;
         this.height=wnd.innerHeight;
-        this.visible=true;
+        this.loadImages("image/frame.png");
+        this.setSizeToImageSize();
+        this.visible=false;
     }
-    
 }
 
 var wnd = new Window();
 wnd.width=640;
 wnd.height=480;
-var lay = new ReportFairyRayer(wnd, null);
+var lay = new Layer(wnd, null);
 lay.width=wnd.innerWidth;
 lay.height=wnd.innerHeight;
-lay.fillRect(0,0,lay.width,lay.height,0xFF7F7F7F);
 
-var f_mane=new FairyManeger(wnd,lay);
-
-
-
-
-var dic = new Dictionary();
 lay.visible=true;
 wnd.visible=true;
+
+
+var reportGame = new ReportFairyGame(wnd, lay);
