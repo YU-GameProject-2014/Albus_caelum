@@ -1,47 +1,131 @@
+class ReportFairyRayer extends Layer{
+    var frame_layer;
+
+    function ReportFairyRayer(wnd, lay){
+        super.Layer(wnd, lay);
+        this.frame_layer = new ReportFrameLayer(wnd, this);
+        this.focusable = true;
+        this.focus();
+        this.frame_layer.visible=true;
+    }
+    
+    function onKeyDown(key, shift, process=true){
+        this.frame_layer.visible=true;
+        this.frame_layer.bringToFront();
+    }
+
+    function onKeyUp(key, shift, process=true){
+        this.frame_layer.visible=false;
+    }
+
+}
+
 class Fairy{
-	var  x,y;
-	var enable;
-	var lay;
+	var  x, y;    //座標
+	var  vx, vy;  //速度ベクトル
+	var enable;   //生死
+	var lay;      //FairyLayer
+	var timer;    //妖精タイマー
+	
 	function Fairy(wnd,lay){
-		this.lay=new Layer(wnd,lay);
-		this.lay.loadImages("image/Fairy.png");
-		this.lay.setSizeToImageSize();
-		this.lay.visible=false;
-		this.lay.onForcus = function(focused, direction){System.inform(focused.window.width);};
+		this.lay=new FairyLayer(wnd, lay, this);
+		this.setVect(0, 0);
 		enable=0;
+		this.timer = new Timer(this, "action");
+		this.timer.interval = 10;
+		this.timer.enabled = true;
 	}
+	
+	function onClick(x, y){
+	    this.lay.opacity = 128;
+	}
+	
+	function move(dx, dy){
+	    this.x += dx;
+	    this.y += dy;
+	    this.lay.setPos(this.x, this.y);
+	    
+	    //画面からはみ出たら消滅
+	    if (this.lay.left + this.lay.width < 0 || this.lay.top  + this.lay.height < 0 ||
+	        this.lay.parent.width  < this.lay.left|| this.lay.parent.height < this.lay.top
+	    ){
+	        this.enable = 0;
+	    }
+	}
+
+	//一定時間ごとに妖精が作動する
+	function action(ev){
+		if(this.enable) this.move(vx, vy);
+    }
+
+    function setVect(vx, vy){
+        this.vx = vx;
+        this.vy = vy;
+    }
+
+    function setVectForCenter(d){
+        var parent_center_pos_x = this.lay.parent.width / 2;
+        var parent_center_pos_y = this.lay.parent.height / 2;
+        var r = Math.sqrt(Math.pow(parent_center_pos_x - this.x, 2) + Math.pow(parent_center_pos_y - this.y, 2));
+        var dx = d * (parent_center_pos_x - this.x) / r;
+        var dy = d * (parent_center_pos_y - this.y) / r;
+        this.setVect(dx, dy);
+    }
+
+}
+
+class FairyLayer extends Layer{
+    var fairy; //Fairyオブジェクト本体
+
+    function FairyLayer(wnd, lay, fairy){
+        super.Layer(wnd, lay);
+        this.fairy = fairy;
+		this.loadImages("image/Fairy.png");
+		this.setSizeToImageSize();
+    }
+
+    function onClick(x, y){
+        /* 実際の処理はFairyクラスに委譲 */
+        this.fairy.onClick(x, y);
+    }
 }
 
 
-class Fairy_Maneger{    
+
+class FairyManeger{    
 	var fairy;
 	var x,y;			//妖精の初期出現位置
 	var width,height;	//ウィンドウのサイズ
 	var rand;
 	var way;
 	
-	function Fairy_Maneger(wnd,lay){
+	function FairyManeger(wnd,lay){
 		width=lay.width;
 		height=lay.height;
 		rand = new Math.RandomGenerator();
 		
 		this.timer = new Timer(this, "action");
-		this.timer.interval = 1000;
+		this.timer.interval = 250;
 		timer.enabled = true;
 		fairy=new Array();
-		for(var i=0; i<10;i++){
+		for(var i=0; i<5;i++){
 			fairy[i]=new Fairy(wnd,lay);
 		}
 	}
 
 	//一定時間ごとに妖精を出現させる
 	function action(ev){
-		for(var i=0; i<10; i++){
+		for(var i=0; i<5; i++){
     		if(fairy[i].enable==0){
     			PopPosition();
-    			fairy[i].enable=1;
-    			fairy[i].lay.setPos(x, y);
+    			invalidate fairy[i];
+    			fairy[i]=new Fairy(wnd,lay);//妖精再作成
+    			fairy[i].lay.setPos(x, y);//レイヤーの座標だけかえてもFairyオブジェクトの座標は変わらない
+    			fairy[i].x = x;//妖精の座標変更
+    			fairy[i].y = y;//妖精の座標変更
     			fairy[i].lay.visible=true;
+    			fairy[i].setVectForCenter(3);
+    			fairy[i].enable=1;
 				break;
 			}
     	}
@@ -49,35 +133,50 @@ class Fairy_Maneger{
     
     //妖精のポップ位置を定める
 	function PopPosition(){
-		way=(int)(rand.random()*4);//0:上　1:右　2:下　3:左
-		if(way==0){
+		way=rand.random32() % 4;//0:上　1:右　2:下　3:左
+		switch(way){
+		case 0:
 			x=(int)(rand.random()*width);
 			y=0;
-		}else if(way==1){
+		    break;
+		case 1:
 			x=width-10;
 			y=(int)(rand.random()*height);
-		}else if(way==2){
+		    break;
+		case 2:
 			x=(int)(rand.random()*width);
 			y=height-10;
-		}else if(way==3){
+		    break;
+		case 3:
 			x=0;
 			y=(int)(rand.random()*height);
+		    break;
 		}
 	}
 }
 
+class ReportFrameLayer extends Layer{
+    function ReportFrameLayer(wnd, lay){
+        super.Layer(wnd, lay);
+		this.loadImages("image/frame.png");
+        this.width=wnd.innerWidth;
+        this.height=wnd.innerHeight;
+        this.visible=true;
+    }
+    
+}
 
 var wnd = new Window();
 wnd.width=640;
 wnd.height=480;
-var lay = new Layer(wnd, null);
+var lay = new ReportFairyRayer(wnd, null);
 lay.width=wnd.innerWidth;
 lay.height=wnd.innerHeight;
-lay.fillRect(0,0,lay.width,lay.height,0xFFFFFFFF);
+lay.fillRect(0,0,lay.width,lay.height,0xFF7F7F7F);
+
+var f_mane=new FairyManeger(wnd,lay);
 
 
-
-var f_mane=new Fairy_Maneger(wnd,lay);
 
 
 var dic = new Dictionary();
