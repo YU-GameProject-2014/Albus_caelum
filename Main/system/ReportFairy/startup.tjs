@@ -1,3 +1,14 @@
+/*
+ * 絶対座標を扱えるようにしたレイヤー
+ */
+class ALLayer extends Kayer {
+    function ALLayer(wnd, lay){
+        super.Layer(wnd, lay);
+    }
+    
+    //property 
+}
+
 class ReportFairyGame{
     var mainLayer;
     var reportUnit;
@@ -74,11 +85,15 @@ class RFGFairy{
         this.setVect(0, 0);
         enable=0;
         this.timer = new Timer(this, "action");
-        this.timer.interval = 10;
+        this.timer.interval = 1000/60;
         this.timer.enabled = true;
     }
     
     function onClick(x, y){
+        this.lay.opacity = 128;
+    }
+
+    function onMouseEnter(){
         this.lay.opacity = 128;
     }
     
@@ -124,11 +139,17 @@ class RFGFairyLayer extends Layer{
         this.fairy = fairy;
         this.loadImages("image/Fairy.png");
         this.setSizeToImageSize();
+        this.hitThreshold=192;
     }
 
     function onClick(x, y){
         /* 実際の処理はFairyクラスに委譲 */
         this.fairy.onClick(x, y);
+    }
+
+    function onMouseEnter(){
+        /* 実際の処理はFairyクラスに委譲 */
+        this.fairy.onMouseEnter();
     }
 }
 
@@ -136,32 +157,35 @@ class RFGFairyManeger{
     var fairy;
     var x,y;            //妖精の初期出現位置
     var width,height;    //ウィンドウのサイズ
+    var maxFairy = 200;
     var rand;
     var way;
+    var wnd;
     var lay;//FairyUnitLayer
     
     function RFGFairyManeger(wnd,lay){
         this.lay = lay;
+        this.wnd = wnd;
         width=lay.width;
         height=lay.height;
         rand = new Math.RandomGenerator();
         
         this.timer = new Timer(this, "action");
-        this.timer.interval = 250;
+        this.timer.interval = 1000;
         timer.enabled = true;
         fairy=new Array();
-        for(var i=0; i<5;i++){
+        for(var i=0; i<this.maxFairy;i++){
             fairy[i]=new RFGFairy(wnd,lay);
         }
     }
 
     //一定時間ごとに妖精を出現させる
     function action(ev){
-        for(var i=0; i<5; i++){
+        for(var i=0; i<maxFairy; i++){
             if(fairy[i].enable==0){
                 popPosition();
                 invalidate fairy[i];
-                fairy[i]=new RFGFairy(wnd,this.lay);//妖精再作成
+                fairy[i]=new RFGFairy(wnd, this.lay);//妖精再作成
                 fairy[i].lay.setPos(x, y);//レイヤーの座標だけかえてもFairyオブジェクトの座標は変わらない
                 fairy[i].x = x;//妖精の座標変更
                 fairy[i].y = y;//妖精の座標変更
@@ -209,15 +233,15 @@ class RFGFrameLayer extends Layer{
     }
 }
 
-var wnd = new Window();
-wnd.width=640;
-wnd.height=480;
-var lay = new Layer(wnd, null);
-lay.width=wnd.innerWidth;
-lay.height=wnd.innerHeight;
+//var wnd = new Window();
+//wnd.width=640;
+//wnd.height=480;
+//var lay = new Layer(wnd, null);
+//lay.width=wnd.innerWidth;
+//lay.height=wnd.innerHeight;
 
-lay.visible=true;
-wnd.visible=true;
+//lay.visible=true;
+//wnd.visible=true;
 
 
-var reportGame = new ReportFairyGame(wnd, lay);
+//var reportGame = new ReportFairyGame(wnd, lay);
