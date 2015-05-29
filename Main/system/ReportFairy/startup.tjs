@@ -34,6 +34,10 @@ class ReportFairyGame{
         this.fairyManager = new RFGFairyManeger(wnd, this.fairyUnit);
     }
     
+    //function createLayer(lay){
+    //    lay.
+    //}
+    
     
     /*
      * キー操作はReportFairyが一元管理します
@@ -84,7 +88,7 @@ class RFGFairy{
         this.lay=new RFGFairyLayer(wnd, lay, this);
         this.setVect(0, 0);
         enable=0;
-        this.timer = new Timer(this, "action");
+        this.timer = new Timer(this, "action");//メモリリークの危険性
         this.timer.interval = 1000/60;
         this.timer.enabled = true;
     }
@@ -136,7 +140,7 @@ class RFGFairyLayer extends Layer{
 
     function RFGFairyLayer(wnd, lay, fairy){
         super.Layer(wnd, lay);
-        this.fairy = fairy;
+        this.fairy = fairy;//メモリリークの危険性
         this.loadImages("image/Fairy.png");
         this.setSizeToImageSize();
         this.hitThreshold=192;
@@ -170,8 +174,8 @@ class RFGFairyManeger{
         height=lay.height;
         rand = new Math.RandomGenerator();
         
-        this.timer = new Timer(this, "action");
-        this.timer.interval = 1000;
+        this.timer = new Timer(this, "action");//メモリリークの危険性
+        this.timer.interval = 10;
         timer.enabled = true;
         fairy=new Array();
         for(var i=0; i<this.maxFairy;i++){
@@ -190,7 +194,7 @@ class RFGFairyManeger{
                 fairy[i].x = x;//妖精の座標変更
                 fairy[i].y = y;//妖精の座標変更
                 fairy[i].lay.visible=true;
-                fairy[i].setVectForCenter(3);//中央方向へ向かうようにする
+                fairy[i].setVectForCenter(10);//中央方向へ向かうようにする
                 fairy[i].enable=1;
                 break;
             }
