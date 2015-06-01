@@ -1,12 +1,41 @@
 /*
  * 絶対座標を扱えるようにしたレイヤー
  */
-class ALLayer extends Kayer {
-    function ALLayer(wnd, lay){
+
+class RFGBasicLayer extends Layer{
+    var owner;
+    
+    function RFGBasicLayer(wnd, lay){
         super.Layer(wnd, lay);
     }
-    
-    //property 
+
+    function onClick(x, y){
+        /* 実際の処理はownerオブジェクトに委譲 */
+        try{
+            this.owner.onClick(x, y);
+        }catch{
+            //握りつぶすのはよくないのだけれども…
+        }
+    }
+
+    /* キー操作はownerオブジェクトに委譲 */
+    function onKeyDown(key, shift, process=true){
+        try{
+            this.owner.onKeyDown(key, shift, process);
+        }catch{
+            //握りつぶすのはよくないのだけれども…
+        }
+    }
+
+    /* キー操作はownerオブジェクトに委譲 */
+    function onKeyUp(key, shift, process=true){
+        try{
+            this.owner.onKeyUp(key, shift, process);
+        }catch{
+            //握りつぶすのはよくないのだけれども…
+        }
+    }
+
 }
 
 class ReportFairyGame{
@@ -15,18 +44,20 @@ class ReportFairyGame{
     var fairyUnit;
     var frameUnit;
     
+    var report;
+    
     var fairyManager; //FairyManager
     var fairies; //array;
     var maxFairyNum;
+ 
+    var score;
     
     function ReportFairyGame(wnd, lay){
-        this.mainLayer  = new RFGLayer(wnd, lay, this);
-        //this.reportUnit = new RFGReportLayer(wnd, this.mainLayer);//未実装
-        this.fairyUnit  = new Layer(wnd, this.mainLayer);//これもサブクラスにしたほうがよい可能性が
-        this.fairyUnit.width = this.mainLayer.width;
-        this.fairyUnit.height = this.mainLayer.height;
-        this.fairyUnit.visible = true;
-        this.frameUnit  = new RFGFrameLayer(wnd, this.mainLayer);
+        this.mainLayer  = RFGLayerCreator.createMainLayer(wnd, lay, this);
+        this.report = new RFGReport(wnd, this.mainLayer);
+        this.reportUnit = this.report.reportLayer;
+        this.fairyUnit = RFGLayerCreator.createFairyUnitLayer(wnd, this.mainLayer);
+        this.frameUnit = RFGLayerCreator.createFrameLayer(wnd, this.mainLayer);
         
         this.fairyUnit.bringToFront();
         this.frameUnit.bringToFront();
@@ -34,9 +65,6 @@ class ReportFairyGame{
         this.fairyManager = new RFGFairyManeger(wnd, this.fairyUnit);
     }
     
-    //function createLayer(lay){
-    //    lay.
-    //}
     
     
     /*
@@ -48,32 +76,17 @@ class ReportFairyGame{
 
     function onKeyUp(key, shift, process=true){
         this.frameUnit.visible=false;
+        invalidate this;
     }
     
-}
-
-class RFGLayer extends Layer{
-    var owner; //ReportFairyオブジェクト
-
-    function RFGLayer(wnd, lay, owner){
-        super.Layer(wnd, lay);
-        this.owner = owner;
-        this.width = lay.width;
-        this.height = lay.height;
-        this.focusable = true;
-        this.fillRect(0, 0, this.width, this.height, 0xFF7F7F7F);
-        this.visible=true;
-        this.focus();
-    }
     
-    /* キー操作はReportFairyオブジェクトに委譲 */
-    function onKeyDown(key, shift, process=true){
-        this.owner.onKeyDown(key, shift, process);
-    }
-
-    /* キー操作はReportFairyオブジェクトに委譲 */
-    function onKeyUp(key, shift, process=true){
-        this.owner.onKeyUp(key, shift, process);
+    
+    function finalize(){
+        invalidate this.fairyManager;
+        invalidate this.fairyUnit;
+        invalidate this.frameUnit;
+        invalidate this.mainLayer;
+        kag.trigger("fairyend");
     }
 }
 
@@ -85,7 +98,8 @@ class RFGFairy{
     var timer;    //妖精タイマー
     
     function RFGFairy(wnd,lay){
-        this.lay=new RFGFairyLayer(wnd, lay, this);
+        //this.lay.parentがNULLになる可能性あり
+        this.lay = RFGLayerCreator.createFairyLayer(wnd, lay, this);
         this.setVect(0, 0);
         enable=0;
         this.timer = new Timer(this, "action");//メモリリークの危険性
@@ -94,10 +108,16 @@ class RFGFairy{
     }
     
     function onClick(x, y){
-        this.lay.opacity = 128;
-    }
-
-    function onMouseEnter(){
+        var tmplay  = this.lay;
+        var tmptop  = y;
+        var tmpleft = x;
+        while(tmplay != null)
+        {
+          tmpleft += tmplay.left;
+          tmptop += tmplay.top;
+          tmplay = tmplay.parent;
+        }
+        
         this.lay.opacity = 128;
     }
     
@@ -110,6 +130,7 @@ class RFGFairy{
         if (this.lay.left + this.lay.width < 0 || this.lay.top  + this.lay.height < 0 ||
             this.lay.parent.width  < this.lay.left|| this.lay.parent.height < this.lay.top
         ){
+            this.timer.enabled = false;
             this.enable = 0;
         }
     }
@@ -133,35 +154,19 @@ class RFGFairy{
         this.setVect(dx, dy);
     }
 
-}
-
-class RFGFairyLayer extends Layer{
-    var fairy; //Fairyオブジェクト本体
-
-    function RFGFairyLayer(wnd, lay, fairy){
-        super.Layer(wnd, lay);
-        this.fairy = fairy;//メモリリークの危険性
-        this.loadImages("image/Fairy.png");
-        this.setSizeToImageSize();
-        this.hitThreshold=192;
+    function finalize(){
+        this.timer.enabled = false;
+        invalidate this.timer;
+        invalidate this.lay;
     }
 
-    function onClick(x, y){
-        /* 実際の処理はFairyクラスに委譲 */
-        this.fairy.onClick(x, y);
-    }
-
-    function onMouseEnter(){
-        /* 実際の処理はFairyクラスに委譲 */
-        this.fairy.onMouseEnter();
-    }
 }
 
 class RFGFairyManeger{    
     var fairy;
     var x,y;            //妖精の初期出現位置
     var width,height;    //ウィンドウのサイズ
-    var maxFairy = 200;
+    var maxFairy = 20;
     var rand;
     var way;
     var wnd;
@@ -175,27 +180,27 @@ class RFGFairyManeger{
         rand = new Math.RandomGenerator();
         
         this.timer = new Timer(this, "action");//メモリリークの危険性
-        this.timer.interval = 10;
+        this.timer.interval = 1000;
         timer.enabled = true;
-        fairy=new Array();
+        this.fairy=new Array();
         for(var i=0; i<this.maxFairy;i++){
-            fairy[i]=new RFGFairy(wnd,lay);
+            this.fairy[i]=new RFGFairy(wnd,lay);
         }
     }
 
     //一定時間ごとに妖精を出現させる
     function action(ev){
         for(var i=0; i<maxFairy; i++){
-            if(fairy[i].enable==0){
+            if(this.fairy[i].enable==0){
                 popPosition();
-                invalidate fairy[i];
-                fairy[i]=new RFGFairy(wnd, this.lay);//妖精再作成
-                fairy[i].lay.setPos(x, y);//レイヤーの座標だけかえてもFairyオブジェクトの座標は変わらない
-                fairy[i].x = x;//妖精の座標変更
-                fairy[i].y = y;//妖精の座標変更
-                fairy[i].lay.visible=true;
-                fairy[i].setVectForCenter(10);//中央方向へ向かうようにする
-                fairy[i].enable=1;
+                invalidate this.fairy[i];
+                this.fairy[i]=new RFGFairy(wnd, this.lay);//妖精再作成
+                this.fairy[i].lay.setPos(x, y);//レイヤーの座標だけかえてもFairyオブジェクトの座標は変わらない
+                this.fairy[i].x = x;//妖精の座標変更
+                this.fairy[i].y = y;//妖精の座標変更
+                this.fairy[i].lay.visible=true;
+                this.fairy[i].setVectForCenter(3);//中央方向へ向かうようにする
+                this.fairy[i].enable=1;
                 break;
             }
         }
@@ -223,19 +228,146 @@ class RFGFairyManeger{
             break;
         }
     }
-}
-
-
-class RFGFrameLayer extends Layer{
-    function RFGFrameLayer(wnd, lay){
-        super.Layer(wnd, lay);
-        this.width=wnd.innerWidth;
-        this.height=wnd.innerHeight;
-        this.loadImages("image/frame.png");
-        this.setSizeToImageSize();
-        this.visible=false;
+    
+    function finalize(){
+        for(var i=0; i<this.maxFairy;i++){
+            invalidate this.fairy[i];
+        }
     }
 }
+
+
+class RFGReport {
+    var reportLayer;
+    var toRightLayer;
+    var toBottomLayer;
+    
+    var timer;
+    
+    function RFGReport(wnd, lay){
+        //RFGReportLayerに変更せよ
+        this.reportLayer = RFGLayerCreator.createReportLayer(wnd, lay);
+        
+        this.defaultPos();
+        this.timer = new Timer(this, "action");
+        this.timer.interval = 10;
+        this.timer.enabled = true;
+    }
+    
+    function CR(){
+        this.reportLayer.toRightLayer.left = 0;
+    }
+    
+    function LF(){
+        this.reportLayer.toRightLayer.top += 10;
+        this.reportLayer.toBottomLayer.top += 10;
+    }
+    
+    function CRLF(){
+        this.CR();
+        this.LF();
+    }
+    
+    function defaultPos(){
+        this.reportLayer.toRightLayer.top = 0;
+        this.reportLayer.toRightLayer.left = 0;
+        this.reportLayer.toBottomLayer.top = 10;
+        this.reportLayer.toBottomLayer.left = 0;
+    }
+    
+    function move(){
+        if (this.reportLayer.toRightLayer.width < this.reportLayer.toRightLayer.left) {
+            this.CRLF();
+            return;
+        }
+        if (this.reportLayer.toRightLayer.height < this.reportLayer.toRightLayer.top) {
+            this.defaultPos();
+            return;
+        }
+        this.reportLayer.toRightLayer.left += 10;
+    }
+
+    function action(ev){
+        this.move();
+    }
+    
+}
+
+class RFGReportLayer extends RFGBasicLayer{
+    var toRightLayer;
+    var toBottomLayer;
+
+    function RFGReportLayer(wnd, lay){
+        super.RFGBasicLayer(wnd, lay);
+        
+        this.loadImages("image/report.png");
+        this.setSizeToImageSize();
+        this.visible = true;
+        
+        this.toRightLayer = new global.RFGBasicLayer(wnd, this);
+        this.toRightLayer.width = this.width;
+        this.toRightLayer.height = this.height;
+        this.toRightLayer.fillRect(0, 0, this.toRightLayer.width, this.toRightLayer.height, 0xFFFF7F7F);
+        this.toRightLayer.visible = true;
+
+        this.toBottomLayer = new global.RFGBasicLayer(wnd, this);
+        this.toBottomLayer.width = this.width;
+        this.toBottomLayer.height = this.height;
+        this.toBottomLayer.fillRect(0, 0, this.toBottomLayer.width, this.toBottomLayer.height, 0xFF7FFFFF);
+        this.toBottomLayer.visible = true;
+    }
+}
+
+
+class RFGLayerCreator{
+    function createMainLayer(wnd, lay, owner){
+        var m_lay = new RFGBasicLayer(wnd, lay);
+        m_lay.owner = owner;
+        m_lay.width = lay.width;
+        m_lay.height = lay.height;
+        m_lay.focusable = true;
+        m_lay.fillRect(0, 0, m_lay.width, m_lay.height, 0xFF7F7F7F);
+        m_lay.visible=true;
+        m_lay.focus();
+        
+        return m_lay;
+    }
+
+    function createFairyUnitLayer(wnd, lay){
+        var f_unit_lay;
+        f_unit_lay = new RFGBasicLayer(wnd, lay);
+        f_unit_lay.width = lay.width;
+        f_unit_lay.height = lay.height;
+        f_unit_lay.visible = true;
+
+        return f_unit_lay;
+    }
+
+    function createFairyLayer(wnd, lay, owner){
+        var f_lay = new RFGBasicLayer(wnd, lay);
+        f_lay.owner = owner;//メモリリークの危険性
+        f_lay.loadImages("image/Fairy.png");
+        f_lay.setSizeToImageSize();
+        
+        return f_lay;
+    }
+
+    function createFrameLayer(wnd, lay){
+        var f_lay = new RFGBasicLayer(wnd, lay);
+        f_lay.width=wnd.innerWidth;
+        f_lay.height=wnd.innerHeight;
+        f_lay.loadImages("image/frame.png");
+        f_lay.setSizeToImageSize();
+        f_lay.visible=false;
+        
+        return f_lay;
+    }
+    
+    function createReportLayer(wnd, lay){
+        return new RFGReportLayer(wnd, lay);
+    }
+}
+
 
 //var wnd = new Window();
 //wnd.width=640;
