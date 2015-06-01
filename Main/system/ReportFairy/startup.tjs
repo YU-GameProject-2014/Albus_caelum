@@ -71,12 +71,24 @@ class ReportFairyGame{
      * ÉLÅ[ëÄçÏÇÕReportFairyÇ™àÍå≥ä«óùÇµÇ‹Ç∑
      */
     function onKeyDown(key, shift, process=true){
-        this.frameUnit.visible=true;
+        switch(key){
+        case VK_Z:
+            this.frameUnit.visible=true;
+            this.report.speed = 20;
+            break;
+        }
     }
 
     function onKeyUp(key, shift, process=true){
-        this.frameUnit.visible=false;
-        invalidate this;
+        switch(key){
+        case VK_Z:
+            this.frameUnit.visible=false;
+            this.report.speed = 2;
+            break;
+        case VK_ESCAPE:
+            invalidate this;
+            break;
+        }
     }
     
     
@@ -242,6 +254,8 @@ class RFGReport {
     var toRightLayer;
     var toBottomLayer;
     
+    var speed = 2;
+    
     var timer;
     
     function RFGReport(wnd, lay){
@@ -284,7 +298,7 @@ class RFGReport {
             this.defaultPos();
             return;
         }
-        this.reportLayer.toRightLayer.left += 10;
+        this.reportLayer.toRightLayer.left += this.speed;
     }
 
     function action(ev){
@@ -364,7 +378,11 @@ class RFGLayerCreator{
     }
     
     function createReportLayer(wnd, lay){
-        return new RFGReportLayer(wnd, lay);
+        var r_lay = new RFGReportLayer(wnd, lay);
+        r_lay.left = (lay.width  - r_lay.width ) / 2; //óºí[ëµÇ¶;
+        r_lay.top  = (lay.height - r_lay.height) / 2; //íÜâõëµÇ¶;
+        
+        return r_lay;
     }
 }
 
