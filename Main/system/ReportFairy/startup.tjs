@@ -8,7 +8,7 @@ class RFGBasicLayer extends Layer{
     function RFGBasicLayer(wnd, lay){
         super.Layer(wnd, lay);
     }
-
+    
     function onClick(x, y){
         /* 実際の処理はownerオブジェクトに委譲 */
         try{
@@ -35,7 +35,38 @@ class RFGBasicLayer extends Layer{
             //握りつぶすのはよくないのだけれども…
         }
     }
+    
+    property boundingLeft
+    {
+        getter()
+        {
+            var tmplay  = this;
+            var tmpleft = 0;
+            while(tmplay != null)
+            {
+                tmpleft += tmplay.left;
+                tmplay = tmplay.parent;
+            }
 
+            return tmpleft;
+        }
+    }
+
+    property boundingTop
+    {
+        getter()
+        {
+            var tmplay  = this;
+            var tmptop  = 0;
+            while(tmplay != null)
+            {
+                tmptop += tmplay.top;
+                tmplay = tmplay.parent;
+            }
+            
+            return tmptop;
+        }
+    }
 }
 
 class ReportFairyGame{
@@ -49,6 +80,8 @@ class ReportFairyGame{
     var fairyManager; //FairyManager
     var fairies; //array;
     var maxFairyNum;
+ 
+    var crazy = false;
  
     var score;
     
@@ -65,6 +98,19 @@ class ReportFairyGame{
         this.fairyManager = new RFGFairyManeger(wnd, this.fairyUnit);
     }
     
+
+    function togleCrazyMode(){
+        if (this.crazy === true) {
+            this.frameUnit.visible=false;
+            this.report.speed = 2;
+            this.crazy = false;
+        } else {
+            this.frameUnit.visible=true;
+            this.report.speed = 20;
+            this.crazy = true;
+        }
+    }
+
     
     
     /*
@@ -73,8 +119,6 @@ class ReportFairyGame{
     function onKeyDown(key, shift, process=true){
         switch(key){
         case VK_Z:
-            this.frameUnit.visible=true;
-            this.report.speed = 20;
             break;
         }
     }
@@ -82,16 +126,13 @@ class ReportFairyGame{
     function onKeyUp(key, shift, process=true){
         switch(key){
         case VK_Z:
-            this.frameUnit.visible=false;
-            this.report.speed = 2;
+            this.togleCrazyMode();
             break;
         case VK_ESCAPE:
             invalidate this;
             break;
         }
     }
-    
-    
     
     function finalize(){
         invalidate this.fairyManager;
@@ -120,16 +161,6 @@ class RFGFairy{
     }
     
     function onClick(x, y){
-        var tmplay  = this.lay;
-        var tmptop  = y;
-        var tmpleft = x;
-        while(tmplay != null)
-        {
-          tmpleft += tmplay.left;
-          tmptop += tmplay.top;
-          tmplay = tmplay.parent;
-        }
-        
         this.lay.opacity = 128;
     }
     
