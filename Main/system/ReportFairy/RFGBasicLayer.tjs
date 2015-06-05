@@ -11,29 +11,20 @@ class RFGBasicLayer extends Layer{
     
     function onClick(x, y){
         /* 実際の処理はownerオブジェクトに委譲 */
-        try{
-            this.owner.onClick(x, y);
-        }catch{
-            //握りつぶすのはよくないのだけれども…
-        }
+        if (this.owner === void) return;
+        this.owner.onClick(x, y);
     }
 
     /* キー操作はownerオブジェクトに委譲 */
     function onKeyDown(key, shift, process=true){
-        try{
-            this.owner.onKeyDown(key, shift, process);
-        }catch{
-            //握りつぶすのはよくないのだけれども…
-        }
+        if (this.owner === void) return;
+        this.owner.onKeyDown(key, shift, process);
     }
 
     /* キー操作はownerオブジェクトに委譲 */
     function onKeyUp(key, shift, process=true){
-        try{
-            this.owner.onKeyUp(key, shift, process);
-        }catch{
-            //握りつぶすのはよくないのだけれども…
-        }
+        if (this.owner === void) return;
+        this.owner.onKeyUp(key, shift, process);
     }
     
     property boundingLeft
