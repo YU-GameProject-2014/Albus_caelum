@@ -27,7 +27,7 @@ class ReportFairyGame{
         this.fairyUnit.bringToFront();
         this.frameUnit.bringToFront();
         
-        this.fairyManager = new RFGFairyManeger(wnd, this.fairyUnit);
+        this.fairyManager = new RFGFairyManeger(wnd, this.fairyUnit, this);
     }
     
 
@@ -63,6 +63,24 @@ class ReportFairyGame{
         case VK_ESCAPE:
             invalidate this;
             break;
+        }
+    }
+    
+    //弟子に相談される
+    function consult(obj){
+        if (obj instanceof "RFGFairy") {
+            if (this.isCollision(obj.lay.collisionLayer, this.report.reportLayer.collisionLayer))return true;
+        }
+    }
+    
+    //オブジェクト同士の接触判定
+    function isCollision(lay1, lay2){
+        if( (lay1.boundingLeft < lay2.boundingLeft + lay2.width ) &&
+            (lay2.boundingLeft < lay1.boundingLeft + lay1.width ) &&
+            (lay1.boundingTop  < lay2.boundingTop  + lay2.height) &&
+            (lay2.boundingTop  < lay1.boundingTop  + lay1.height) ) {
+
+            return true;
         }
     }
     

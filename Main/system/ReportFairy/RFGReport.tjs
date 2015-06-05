@@ -1,7 +1,5 @@
 class RFGReport {
     var reportLayer;
-    var toRightLayer;
-    var toBottomLayer;
     
     var speed = 2;
     

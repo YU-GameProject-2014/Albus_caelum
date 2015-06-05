@@ -59,7 +59,7 @@ class RFGLayerCreator{
         var a_lay = new RFGBasicLayer(wnd, lay);
         a_lay.width  = 50;
         a_lay.height = 80;
-        a_lay.fillRect(0, 0, a_lay.width, a_lay.height, 0xFFFF0000);
+        a_lay.fillRect(0, 0, a_lay.width, a_lay.height, 0x7F00FF00);
         a_lay.setPosCenter();
         a_lay.bringToFront();
         a_lay.visible = true;
@@ -71,9 +71,9 @@ class RFGLayerCreator{
 
     function createReportAtariLayer(wnd, lay){
         var a_lay = new RFGBasicLayer(wnd, lay);
-        a_lay.width  = a_lay.parent.width  * 0.733;
-        a_lay.height = a_lay.parent.height * 0.733;
-        a_lay.fillRect(0, 0, a_lay.width, a_lay.height, 0xFFFF0000);
+        a_lay.width  = a_lay.parent.width  * 0.500;
+        a_lay.height = a_lay.parent.height * 0.333;
+        a_lay.fillRect(0, 0, a_lay.width, a_lay.height, 0x7F00FF00);
         a_lay.setPosCenter();
         a_lay.bringToFront();
         a_lay.visible = true;

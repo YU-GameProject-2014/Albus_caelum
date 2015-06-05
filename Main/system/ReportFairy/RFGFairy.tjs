@@ -4,12 +4,15 @@ class RFGFairy{
     var enable;   //生死
     var lay;      //FairyLayer
     var timer;    //妖精タイマー
+    var owner;    //指導者
     
-    function RFGFairy(wnd,lay){
+    function RFGFairy(wnd, lay, owner){
+        this.owner = owner;
         //this.lay.parentがNULLになる可能性あり
         this.lay = RFGLayerCreator.createFairyLayer(wnd, lay, this);
         this.setVect(0, 0);
         enable=0;
+        this.owner = owner;
         this.timer = new Timer(this, "action");//メモリリークの危険性
         this.timer.interval = 1000/60;
         this.timer.enabled = true;
@@ -30,12 +33,24 @@ class RFGFairy{
         ){
             this.timer.enabled = false;
             this.enable = 0;
+            this.lay.visible = false;
+        }
+        
+        if (this.advice()) {
+            this.timer.enabled = false;
+            this.enable = 0;
+            this.lay.visible = false;
         }
     }
 
     //一定時間ごとに妖精が作動する
     function action(ev){
         if(this.enable) this.move(vx, vy);
+    }
+
+    //指導者に指示を仰ぐ
+    function advice() {
+        return owner.consult(this);
     }
 
     function setVect(vx, vy){

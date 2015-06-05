@@ -7,12 +7,16 @@ class RFGFairyManeger{
     var way;
     var wnd;
     var lay;//FairyUnitLayer
+    var owner;//管理者
     
-    function RFGFairyManeger(wnd,lay){
+    
+    function RFGFairyManeger(wnd,lay, owner){
+        this.owner = owner;
+        
         this.lay = lay;
         this.wnd = wnd;
-        width=lay.width;
-        height=lay.height;
+        this.width=lay.width;
+        this.height=lay.height;
         rand = new Math.RandomGenerator();
         
         this.timer = new Timer(this, "action");//メモリリークの危険性
@@ -20,7 +24,7 @@ class RFGFairyManeger{
         timer.enabled = true;
         this.fairy=new Array();
         for(var i=0; i<this.maxFairy;i++){
-            this.fairy[i]=new RFGFairy(wnd,lay);
+            this.fairy[i]=new RFGFairy(wnd,lay, owner);
         }
     }
 
@@ -30,12 +34,12 @@ class RFGFairyManeger{
             if(this.fairy[i].enable==0){
                 popPosition();
                 invalidate this.fairy[i];
-                this.fairy[i]=new RFGFairy(wnd, this.lay);//妖精再作成
+                this.fairy[i]=new RFGFairy(wnd, this.lay, owner);//妖精再作成
                 this.fairy[i].lay.setPos(x, y);//レイヤーの座標だけかえてもFairyオブジェクトの座標は変わらない
                 this.fairy[i].x = x;//妖精の座標変更
                 this.fairy[i].y = y;//妖精の座標変更
                 this.fairy[i].lay.visible=true;
-                this.fairy[i].setVectForCenter(3);//中央方向へ向かうようにする
+                this.fairy[i].setVectForCenter(0.25);//中央方向へ向かうようにする
                 this.fairy[i].enable=1;
                 break;
             }
@@ -51,12 +55,12 @@ class RFGFairyManeger{
             y=0;
             break;
         case 1:
-            x=width-10;
+            x=width - 10;
             y=(int)(rand.random()*height);
             break;
         case 2:
             x=(int)(rand.random()*width);
-            y=height-10;
+            y=height - 10;
             break;
         case 3:
             x=0;
