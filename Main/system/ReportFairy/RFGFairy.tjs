@@ -1,0 +1,61 @@
+class RFGFairy{
+    var x, y;     //座標
+    var vx, vy;   //速度ベクトル
+    var enable;   //生死
+    var lay;      //FairyLayer
+    var timer;    //妖精タイマー
+    
+    function RFGFairy(wnd,lay){
+        //this.lay.parentがNULLになる可能性あり
+        this.lay = RFGLayerCreator.createFairyLayer(wnd, lay, this);
+        this.setVect(0, 0);
+        enable=0;
+        this.timer = new Timer(this, "action");//メモリリークの危険性
+        this.timer.interval = 1000/60;
+        this.timer.enabled = true;
+    }
+    
+    function onClick(x, y){
+        this.lay.opacity = 128;
+    }
+    
+    function move(dx, dy){
+        this.x += dx;
+        this.y += dy;
+        this.lay.setPos(this.x, this.y);
+        
+        //画面からはみ出たら消滅
+        if (this.lay.left + this.lay.width < 0 || this.lay.top  + this.lay.height < 0 ||
+            this.lay.parent.width  < this.lay.left|| this.lay.parent.height < this.lay.top
+        ){
+            this.timer.enabled = false;
+            this.enable = 0;
+        }
+    }
+
+    //一定時間ごとに妖精が作動する
+    function action(ev){
+        if(this.enable) this.move(vx, vy);
+    }
+
+    function setVect(vx, vy){
+        this.vx = vx;
+        this.vy = vy;
+    }
+
+    function setVectForCenter(d){
+        var parent_center_pos_x = this.lay.parent.width / 2;
+        var parent_center_pos_y = this.lay.parent.height / 2;
+        var r = Math.sqrt(Math.pow(parent_center_pos_x - this.x, 2) + Math.pow(parent_center_pos_y - this.y, 2));
+        var dx = d * (parent_center_pos_x - this.x) / r;
+        var dy = d * (parent_center_pos_y - this.y) / r;
+        this.setVect(dx, dy);
+    }
+
+    function finalize(){
+        this.timer.enabled = false;
+        invalidate this.timer;
+        invalidate this.lay;
+    }
+
+}

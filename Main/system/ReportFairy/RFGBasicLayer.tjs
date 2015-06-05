@@ -1,0 +1,75 @@
+/*
+ * 絶対座標を扱えるようにしたレイヤー
+ */
+
+class RFGBasicLayer extends Layer{
+    var owner;
+    
+    function RFGBasicLayer(wnd, lay){
+        super.Layer(wnd, lay);
+    }
+    
+    function onClick(x, y){
+        /* 実際の処理はownerオブジェクトに委譲 */
+        try{
+            this.owner.onClick(x, y);
+        }catch{
+            //握りつぶすのはよくないのだけれども…
+        }
+    }
+
+    /* キー操作はownerオブジェクトに委譲 */
+    function onKeyDown(key, shift, process=true){
+        try{
+            this.owner.onKeyDown(key, shift, process);
+        }catch{
+            //握りつぶすのはよくないのだけれども…
+        }
+    }
+
+    /* キー操作はownerオブジェクトに委譲 */
+    function onKeyUp(key, shift, process=true){
+        try{
+            this.owner.onKeyUp(key, shift, process);
+        }catch{
+            //握りつぶすのはよくないのだけれども…
+        }
+    }
+    
+    property boundingLeft
+    {
+        getter()
+        {
+            var tmplay  = this;
+            var tmpleft = 0;
+            while(tmplay != null)
+            {
+                tmpleft += tmplay.left;
+                tmplay = tmplay.parent;
+            }
+
+            return tmpleft;
+        }
+    }
+
+    property boundingTop
+    {
+        getter()
+        {
+            var tmplay  = this;
+            var tmptop  = 0;
+            while(tmplay != null)
+            {
+                tmptop += tmplay.top;
+                tmplay = tmplay.parent;
+            }
+            
+            return tmptop;
+        }
+    }
+    
+    function setPosCenter(){
+        this.left = (this.parent.width  - this.width ) / 2; //両端揃え;
+        this.top  = (this.parent.height - this.height) / 2; //中央揃え;
+    }
+}

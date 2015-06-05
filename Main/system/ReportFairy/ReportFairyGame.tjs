@@ -1,0 +1,76 @@
+/*
+ *レポートの妖精ゲーム本体
+ */
+class ReportFairyGame{
+    var mainLayer;
+    var reportUnit;
+    var fairyUnit;
+    var frameUnit;
+    
+    var report; 
+    
+    var fairyManager; //FairyManager
+    var fairies; //array;
+    var maxFairyNum;
+ 
+    var crazy = false;
+ 
+    var score;
+    
+    function ReportFairyGame(wnd, lay){
+        this.mainLayer  = RFGLayerCreator.createMainLayer(wnd, lay, this);
+        this.report = new RFGReport(wnd, this.mainLayer);
+        this.reportUnit = this.report.reportLayer;
+        this.fairyUnit = RFGLayerCreator.createFairyUnitLayer(wnd, this.mainLayer);
+        this.frameUnit = RFGLayerCreator.createFrameLayer(wnd, this.mainLayer);
+        
+        this.fairyUnit.bringToFront();
+        this.frameUnit.bringToFront();
+        
+        this.fairyManager = new RFGFairyManeger(wnd, this.fairyUnit);
+    }
+    
+
+    function togleCrazyMode(){
+        if (this.crazy === true) {
+            this.frameUnit.visible=false;
+            this.report.speed = 2;
+            this.crazy = false;
+        } else {
+            this.frameUnit.visible=true;
+            this.report.speed = 20;
+            this.crazy = true;
+        }
+    }
+
+    
+    
+    /*
+     * キー操作はReportFairyが一元管理します
+     */
+    function onKeyDown(key, shift, process=true){
+        switch(key){
+        case VK_Z:
+            break;
+        }
+    }
+
+    function onKeyUp(key, shift, process=true){
+        switch(key){
+        case VK_Z:
+            this.togleCrazyMode();
+            break;
+        case VK_ESCAPE:
+            invalidate this;
+            break;
+        }
+    }
+    
+    function finalize(){
+        invalidate this.fairyManager;
+        invalidate this.fairyUnit;
+        invalidate this.frameUnit;
+        invalidate this.mainLayer;
+        kag.trigger("fairyend");
+    }
+}

@@ -1,0 +1,57 @@
+class RFGReport {
+    var reportLayer;
+    var toRightLayer;
+    var toBottomLayer;
+    
+    var speed = 2;
+    
+    var timer;
+    
+    function RFGReport(wnd, lay){
+        //RFGReportLayerÇ…ïœçXÇπÇÊ
+        this.reportLayer = RFGLayerCreator.createReportLayer(wnd, lay);
+        
+        this.defaultPos();
+        this.timer = new Timer(this, "action");
+        this.timer.interval = 10;
+        this.timer.enabled = true;
+    }
+    
+    function CR(){
+        this.reportLayer.toRightLayer.left = 0;
+    }
+    
+    function LF(){
+        this.reportLayer.toRightLayer.top += 10;
+        this.reportLayer.toBottomLayer.top += 10;
+    }
+    
+    function CRLF(){
+        this.CR();
+        this.LF();
+    }
+    
+    function defaultPos(){
+        this.reportLayer.toRightLayer.top = 0;
+        this.reportLayer.toRightLayer.left = 0;
+        this.reportLayer.toBottomLayer.top = 10;
+        this.reportLayer.toBottomLayer.left = 0;
+    }
+    
+    function move(){
+        if (this.reportLayer.toRightLayer.width < this.reportLayer.toRightLayer.left) {
+            this.CRLF();
+            return;
+        }
+        if (this.reportLayer.toRightLayer.height < this.reportLayer.toRightLayer.top) {
+            this.defaultPos();
+            return;
+        }
+        this.reportLayer.toRightLayer.left += this.speed;
+    }
+
+    function action(ev){
+        this.move();
+    }
+    
+}
