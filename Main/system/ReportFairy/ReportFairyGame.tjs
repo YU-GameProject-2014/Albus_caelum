@@ -6,8 +6,10 @@ class ReportFairyGame{
     var reportUnit;
     var fairyUnit;
     var frameUnit;
+    var lifebarUnit;
     
     var report; 
+    var lifebar;
     
     var fairyManager; //FairyManager
     var fairies; //array;
@@ -23,14 +25,17 @@ class ReportFairyGame{
         this.reportUnit = this.report.reportLayer;
         this.fairyUnit = RFGLayerCreator.createFairyUnitLayer(wnd, this.mainLayer);
         this.frameUnit = RFGLayerCreator.createFrameLayer(wnd, this.mainLayer);
+        this.lifebar = new RFGLifebar(wnd, this.mainLayer);
+        this.lifebarUnit = this.lifebar.lay;
         
         this.fairyUnit.bringToFront();
         this.frameUnit.bringToFront();
+        this.lifebarUnit.bringToFront();
         
         this.fairyManager = new RFGFairyManeger(wnd, this.fairyUnit, this);
     }
     
-
+    //集中モード切替
     function togleCrazyMode(){
         if (this.crazy === true) {
             this.frameUnit.visible=false;
@@ -68,8 +73,16 @@ class ReportFairyGame{
     
     //弟子に相談される
     function consult(obj){
+        //妖精オブジェクトからの相談
         if (obj instanceof "RFGFairy") {
-            if (this.isCollision(obj.lay.collisionLayer, this.report.reportLayer.collisionLayer))return true;
+            //衝突したと指示
+            if (this.isCollision(obj.lay.collisionLayer, this.report.reportLayer.collisionLayer)) {
+                //ライフ計算
+                this.lifebar.life--;
+                this.lifebar.update();
+
+                return true;
+            }
         }
     }
     

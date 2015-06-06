@@ -54,6 +54,20 @@ class RFGLayerCreator{
         
         return r_lay;
     }
+
+
+    function createLifebarLayer(wnd, lay){
+        var l_lay = new RFGBasicLayer(wnd, lay);
+        l_lay.width = 400;
+        l_lay.height = 20;
+        l_lay.setPosCenter();
+        l_lay.top = l_lay.parent.height - 2 * l_lay.height;
+        l_lay.hitThreshold = 256;
+        l_lay.visible = true;
+        
+        return l_lay;
+    }
+
     
     function createFairyAtariLayer(wnd, lay){
         var a_lay = new RFGBasicLayer(wnd, lay);

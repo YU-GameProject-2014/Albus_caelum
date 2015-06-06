@@ -39,7 +39,7 @@ class RFGFairyManeger{
                 this.fairy[i].x = x;//妖精の座標変更
                 this.fairy[i].y = y;//妖精の座標変更
                 this.fairy[i].lay.visible=true;
-                this.fairy[i].setVectForCenter(0.25);//中央方向へ向かうようにする
+                this.fairy[i].setVectForCenter(1.25);//中央方向へ向かうようにする
                 this.fairy[i].enable=1;
                 break;
             }
