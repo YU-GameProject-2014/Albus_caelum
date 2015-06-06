@@ -17,7 +17,32 @@ class ReportFairyGame{
  
     var crazy = false;
  
+ 
     var score;
+    var _life;
+    var _maxlife;
+    
+    property life
+    {
+        setter(_life){
+            this.lifebar.life = _life;
+        }
+        
+        getter(){
+            return _life;
+        }
+    }
+
+    property maxlife
+    {
+        setter(_maxlife){
+            this.lifebar.maxlife = _maxlife;
+        }
+        
+        getter(){
+            return _maxlife;
+        }
+    }
     
     function ReportFairyGame(wnd, lay){
         this.mainLayer  = RFGLayerCreator.createMainLayer(wnd, lay, this);
@@ -33,6 +58,8 @@ class ReportFairyGame{
         this.lifebarUnit.bringToFront();
         
         this.fairyManager = new RFGFairyManeger(wnd, this.fairyUnit, this);
+
+        this.maxlife = this.life = 100;//初期ライフ
     }
     
     //集中モード切替
