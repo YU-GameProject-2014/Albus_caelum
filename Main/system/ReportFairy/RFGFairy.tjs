@@ -20,6 +20,7 @@ class RFGFairy{
     
     function onClick(x, y){
         this.lay.opacity = 128;
+        this.lay.hitThreshold = 256;
     }
     
     function move(dx, dy){
