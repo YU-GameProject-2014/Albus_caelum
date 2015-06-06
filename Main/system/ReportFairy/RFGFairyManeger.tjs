@@ -69,6 +69,39 @@ class RFGFairyManeger{
         }
     }
     
+    //¶‚«‚Ä‚é—d¸‚½‚¿
+    //¦Ü–¡ŠúŒÀ’ˆÓ
+    function getEnabledFaries(){
+        var faries = new Array();
+        for(var i=0; i<maxFairy; i++){
+            try{
+                if(this.fairy[i].enable==1){
+                    faries.add(this.fairy[i]);
+                }
+            }catch{
+                continue;
+            }
+        }
+        return faries;
+    }
+    
+    //‘SŒR“ËŒ‚
+    function startAll(){
+        var faries = getEnabledFaries();
+        for(var i = 0; i < faries.count; i++){
+            faries[i].timer.enabled = true;
+        }
+    }
+    
+    //‘SŒR’â~
+    function stopAll(){
+        var faries = getEnabledFaries();
+        for(var i = 0; i < faries.count; i++){
+            faries[i].timer.enabled = false;
+        }
+    }
+    
+    
     function finalize(){
         for(var i=0; i<this.maxFairy;i++){
             invalidate this.fairy[i];

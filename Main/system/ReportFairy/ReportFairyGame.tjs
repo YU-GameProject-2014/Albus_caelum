@@ -68,10 +68,12 @@ class ReportFairyGame{
             this.frameUnit.visible=false;
             this.report.speed = 2;
             this.crazy = false;
+            this.fairyManager.startAll();
         } else {
             this.frameUnit.visible=true;
             this.report.speed = 20;
             this.crazy = true;
+            this.fairyManager.stopAll();
         }
     }
 
