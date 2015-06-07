@@ -51,7 +51,7 @@ class RFGLayerCreator{
         var r_lay = new RFGReportLayer(wnd, lay);
         r_lay.setPosCenter();
 
-        r_lay.collisionLayers.add(RFGLayerCreator.createCollisionLayer(wnd, r_lay, 0,  0, 20, 20 ));
+        r_lay.collisionLayers.add(RFGLayerCreator.createCollisionLayer(wnd, r_lay, 0,  0, 0, 20 ));
         r_lay.collisionLayers.add(RFGLayerCreator.createCollisionLayer(wnd, r_lay, 50, 70, 100, 100));
         r_lay.collisionLayers.add(RFGLayerCreator.createCollisionLayer(wnd, r_lay, 150, 200, 50, 100));
 

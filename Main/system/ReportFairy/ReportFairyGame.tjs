@@ -135,6 +135,11 @@ class ReportFairyGame{
             {
                 lay1 = obj1.lay.collisionLayers[i];
                 lay2 = obj2.lay.collisionLayers[j];
+                
+                //サイズが不正なレイヤーの処理はしない
+                if(lay1.width <= 0 || lay1.height <= 0 || lay2.width <= 0 || lay2.height <= 0) continue;
+                
+                //TODO: 親レイヤーからはみ出した部分の衝突判定どうしましょう
             
                 if( (lay1.boundingLeft < lay2.boundingLeft + lay2.width ) &&
                     (lay2.boundingLeft < lay1.boundingLeft + lay1.width ) &&
