@@ -84,6 +84,15 @@ class RFGFairyManeger{
         }
         return faries;
     }
+
+    //‘SŒRŽ©Œˆ
+    function killAll(){
+        var faries = getEnabledFaries();
+        for(var i = 0; i < faries.count; i++){
+            faries[i].suicide();
+        }
+    }
+
     
     //‘SŒR“ËŒ‚
     function startAll(){

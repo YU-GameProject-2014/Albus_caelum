@@ -3,7 +3,8 @@
  */
 
 class RFGBasicLayer extends Layer{
-    var owner;
+    var owner;//ŠÇ—Ò
+    var collisionLayers = new Array();//Õ“Ë”»’èƒŒƒCƒ„[”z—ñ
     
     function RFGBasicLayer(wnd, lay){
         super.Layer(wnd, lay);

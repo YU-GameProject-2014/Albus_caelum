@@ -1,5 +1,5 @@
 class RFGReport {
-    var reportLayer;
+    var lay;
     
     var speed = 2;
     
@@ -7,7 +7,7 @@ class RFGReport {
     
     function RFGReport(wnd, lay){
         //RFGReportLayerÇ…ïœçXÇπÇÊ
-        this.reportLayer = RFGLayerCreator.createReportLayer(wnd, lay);
+        this.lay = RFGLayerCreator.createReportLayer(wnd, lay);
         
         this.defaultPos();
         this.timer = new Timer(this, "action");
@@ -16,12 +16,12 @@ class RFGReport {
     }
     
     function CR(){
-        this.reportLayer.toRightLayer.left = 0;
+        this.lay.toRightLayer.left = 0;
     }
     
     function LF(){
-        this.reportLayer.toRightLayer.top += 10;
-        this.reportLayer.toBottomLayer.top += 10;
+        this.lay.toRightLayer.top += 10;
+        this.lay.toBottomLayer.top += 10;
     }
     
     function CRLF(){
@@ -30,22 +30,22 @@ class RFGReport {
     }
     
     function defaultPos(){
-        this.reportLayer.toRightLayer.top = 0;
-        this.reportLayer.toRightLayer.left = 0;
-        this.reportLayer.toBottomLayer.top = 10;
-        this.reportLayer.toBottomLayer.left = 0;
+        this.lay.toRightLayer.top = 0;
+        this.lay.toRightLayer.left = 0;
+        this.lay.toBottomLayer.top = 10;
+        this.lay.toBottomLayer.left = 0;
     }
     
     function move(){
-        if (this.reportLayer.toRightLayer.width < this.reportLayer.toRightLayer.left) {
+        if (this.lay.toRightLayer.width < this.lay.toRightLayer.left) {
             this.CRLF();
             return;
         }
-        if (this.reportLayer.toRightLayer.height < this.reportLayer.toRightLayer.top) {
+        if (this.lay.toRightLayer.height < this.lay.toRightLayer.top) {
             this.defaultPos();
             return;
         }
-        this.reportLayer.toRightLayer.left += this.speed;
+        this.lay.toRightLayer.left += this.speed;
     }
 
     function action(ev){

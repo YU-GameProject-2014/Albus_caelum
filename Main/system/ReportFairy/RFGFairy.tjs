@@ -32,15 +32,11 @@ class RFGFairy{
         if (this.lay.left + this.lay.width < 0 || this.lay.top  + this.lay.height < 0 ||
             this.lay.parent.width  < this.lay.left|| this.lay.parent.height < this.lay.top
         ){
-            this.timer.enabled = false;
-            this.enable = 0;
-            this.lay.visible = false;
+            this.suicide();
         }
         
         if (this.advice()) {
-            this.timer.enabled = false;
-            this.enable = 0;
-            this.lay.visible = false;
+            this.suicide();
         }
     }
 
@@ -66,6 +62,13 @@ class RFGFairy{
         var dx = d * (parent_center_pos_x - this.x) / r;
         var dy = d * (parent_center_pos_y - this.y) / r;
         this.setVect(dx, dy);
+    }
+
+    //Ž©Œˆ
+    function suicide(){
+        this.timer.enabled = false;
+        this.enable = 0;
+        this.lay.visible = false;
     }
 
     function finalize(){

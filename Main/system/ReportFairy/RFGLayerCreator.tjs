@@ -28,7 +28,9 @@ class RFGLayerCreator{
         f_lay.loadImages("image/Fairy.png");
         f_lay.setSizeToImageSize();
         
-        f_lay.collisionLayer = RFGLayerCreator.createFairyAtariLayer(wnd, f_lay);
+        f_lay.collisionLayers.add(RFGLayerCreator.createCollisionLayer(wnd, f_lay, 0,  0, f_lay.width, 20 ));
+        f_lay.collisionLayers.add(RFGLayerCreator.createCollisionLayer(wnd, f_lay, 0, 30, f_lay.width, 100));
+        
         
         return f_lay;
     }
@@ -49,7 +51,9 @@ class RFGLayerCreator{
         var r_lay = new RFGReportLayer(wnd, lay);
         r_lay.setPosCenter();
 
-        r_lay.collisionLayer = RFGLayerCreator.createReportAtariLayer(wnd, r_lay);
+        r_lay.collisionLayers.add(RFGLayerCreator.createCollisionLayer(wnd, r_lay, 0,  0, 20, 20 ));
+        r_lay.collisionLayers.add(RFGLayerCreator.createCollisionLayer(wnd, r_lay, 50, 70, 100, 100));
+        r_lay.collisionLayers.add(RFGLayerCreator.createCollisionLayer(wnd, r_lay, 150, 200, 50, 100));
 
         
         return r_lay;
@@ -68,17 +72,23 @@ class RFGLayerCreator{
         return l_lay;
     }
 
+    function createCollisionLayer(wnd, lay, x, y, width, height){
+        var col_lay = new RFGBasicLayer(wnd, lay);
+        col_lay.left = x;
+        col_lay.top = y;
+        col_lay.width  = width;
+        col_lay.height = height;
+        col_lay.fillRect(0, 0, col_lay.width, col_lay.height, 0x7F00FF00);
+        col_lay.bringToFront();
+        col_lay.visible = true;
+        col_lay.hitThreshold = 256;
+
+        return col_lay;
+    }
     
     function createFairyAtariLayer(wnd, lay){
-        var a_lay = new RFGBasicLayer(wnd, lay);
-        a_lay.width  = 50;
-        a_lay.height = 80;
-        a_lay.fillRect(0, 0, a_lay.width, a_lay.height, 0x7F00FF00);
+        var a_lay = RFGLayerCreator.createCollisionLayer(wnd, lay, 0, 0, 50, 80);
         a_lay.setPosCenter();
-        a_lay.bringToFront();
-        a_lay.visible = true;
-        a_lay.hitThreshold = 256;
-
         
         return a_lay;
     }

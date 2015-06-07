@@ -47,7 +47,7 @@ class ReportFairyGame{
     function ReportFairyGame(wnd, lay){
         this.mainLayer  = RFGLayerCreator.createMainLayer(wnd, lay, this);
         this.report = new RFGReport(wnd, this.mainLayer);
-        this.reportUnit = this.report.reportLayer;
+        this.reportUnit = this.report.lay;
         this.fairyUnit = RFGLayerCreator.createFairyUnitLayer(wnd, this.mainLayer);
         this.frameUnit = RFGLayerCreator.createFrameLayer(wnd, this.mainLayer);
         this.lifebar = new RFGLifebar(wnd, this.mainLayer);
@@ -68,12 +68,10 @@ class ReportFairyGame{
             this.frameUnit.visible=false;
             this.report.speed = 2;
             this.crazy = false;
-            this.fairyManager.startAll();
         } else {
             this.frameUnit.visible=true;
             this.report.speed = 20;
             this.crazy = true;
-            this.fairyManager.stopAll();
         }
     }
 
@@ -86,6 +84,11 @@ class ReportFairyGame{
         switch(key){
         case VK_Z:
             break;
+ 
+        case VK_X:
+            this.fairyManager.stopAll();
+            break;
+ 
         }
     }
 
@@ -97,6 +100,12 @@ class ReportFairyGame{
         case VK_ESCAPE:
             invalidate this;
             break;
+        case VK_X:
+            this.fairyManager.startAll();
+            break;
+        case VK_C:
+            this.fairyManager.killAll();
+            break;
         }
     }
     
@@ -105,7 +114,7 @@ class ReportFairyGame{
         //妖精オブジェクトからの相談
         if (obj instanceof "RFGFairy") {
             //衝突したと指示
-            if (this.isCollision(obj.lay.collisionLayer, this.report.reportLayer.collisionLayer)) {
+            if (this.isCollision(obj, this.report)) {
                 //ライフ計算
                 this.lifebar.life--;
                 this.lifebar.update();
@@ -116,13 +125,32 @@ class ReportFairyGame{
     }
     
     //オブジェクト同士の接触判定
-    function isCollision(lay1, lay2){
-        if( (lay1.boundingLeft < lay2.boundingLeft + lay2.width ) &&
-            (lay2.boundingLeft < lay1.boundingLeft + lay1.width ) &&
-            (lay1.boundingTop  < lay2.boundingTop  + lay2.height) &&
-            (lay2.boundingTop  < lay1.boundingTop  + lay1.height) ) {
+    function isCollision(obj1, obj2){
+        var lay1;
+        var lay2;
+        
+        for(var i = 0; i < obj1.lay.collisionLayers.count; i++)
+        {
+            for(var j = 0; j < obj2.lay.collisionLayers.count; j++)
+            {
+                lay1 = obj1.lay.collisionLayers[i];
+                lay2 = obj2.lay.collisionLayers[j];
+            
+                if( (lay1.boundingLeft < lay2.boundingLeft + lay2.width ) &&
+                    (lay2.boundingLeft < lay1.boundingLeft + lay1.width ) &&
+                    (lay1.boundingTop  < lay2.boundingTop  + lay2.height) &&
+                    (lay2.boundingTop  < lay1.boundingTop  + lay1.height) ) {
+    
+                    return true;
+            }
+        }
+    
+        //if( (lay1.boundingLeft < lay2.boundingLeft + lay2.width ) &&
+        //    (lay2.boundingLeft < lay1.boundingLeft + lay1.width ) &&
+        //    (lay1.boundingTop  < lay2.boundingTop  + lay2.height) &&
+        //    (lay2.boundingTop  < lay1.boundingTop  + lay1.height) ) {
 
-            return true;
+        //    return true;
         }
     }
     
