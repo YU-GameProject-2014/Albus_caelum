@@ -1,12 +1,11 @@
 class RFGReport {
     var lay;
-    
+    var owner;//ä«óùé“
     var speed = 2;
-    
     var timer;
     
-    function RFGReport(wnd, lay){
-        //RFGReportLayerÇ…ïœçXÇπÇÊ
+    function RFGReport(wnd, lay, owner){
+        this.owner = owner;
         this.lay = RFGLayerCreator.createReportLayer(wnd, lay);
         
         this.defaultPos();
@@ -42,6 +41,7 @@ class RFGReport {
             return;
         }
         if (this.lay.toRightLayer.height < this.lay.toRightLayer.top) {
+            this.owner.writedReport();
             this.defaultPos();
             return;
         }

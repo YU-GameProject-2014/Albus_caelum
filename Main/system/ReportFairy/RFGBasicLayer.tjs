@@ -35,7 +35,23 @@ class RFGBasicLayer extends Layer{
     {
         getter()
         {
-            var tmplay  = this;
+            return this.boundingParentLeft + this.left;
+        }
+    }
+
+    property boundingTop
+    {
+        getter()
+        {
+            return this.boundingParentTop + this.top;
+        }
+    }
+
+    property boundingParentLeft
+    {
+        getter()
+        {
+            var tmplay  = this.parent;
             var tmpleft = 0;
             while(tmplay != null)
             {
@@ -47,11 +63,11 @@ class RFGBasicLayer extends Layer{
         }
     }
 
-    property boundingTop
+    property boundingParentTop
     {
         getter()
         {
-            var tmplay  = this;
+            var tmplay  = this.parent;
             var tmptop  = 0;
             while(tmplay != null)
             {
@@ -60,22 +76,6 @@ class RFGBasicLayer extends Layer{
             }
             
             return tmptop;
-        }
-    }
-
-    property boundingParentLeft
-    {
-        getter()
-        {
-            return this.boundingLeft - this.left;
-        }
-    }
-
-    property boundingParentTop
-    {
-        getter()
-        {
-            return this.boundingTop - this.top;
         }
     }
 

@@ -7,9 +7,12 @@ class ReportFairyGame{
     var fairyUnit;
     var frameUnit;
     var lifebarUnit;
+    var scoreUnit;
     
     var report; 
     var lifebar;
+    var score;
+    
     
     var fairyManager; //FairyManager
     var fairies; //array;
@@ -17,8 +20,7 @@ class ReportFairyGame{
  
     var crazy = false;
  
- 
-    var score;
+    //var _score;
     var _life;
     var _maxlife;
     
@@ -46,20 +48,25 @@ class ReportFairyGame{
     
     function ReportFairyGame(wnd, lay){
         this.mainLayer  = RFGLayerCreator.createMainLayer(wnd, lay, this);
-        this.report = new RFGReport(wnd, this.mainLayer);
+        this.report = new RFGReport(wnd, this.mainLayer, this);
         this.reportUnit = this.report.lay;
         this.fairyUnit = RFGLayerCreator.createFairyUnitLayer(wnd, this.mainLayer);
         this.frameUnit = RFGLayerCreator.createFrameLayer(wnd, this.mainLayer);
         this.lifebar = new RFGLifebar(wnd, this.mainLayer);
         this.lifebarUnit = this.lifebar.lay;
+        this.score = new RFGScore(wnd, this.mainLayer);
+        this.scoreUnit = this.score.lay;
         
         this.fairyUnit.bringToFront();
         this.frameUnit.bringToFront();
         this.lifebarUnit.bringToFront();
+        this.scoreUnit.bringToFront();
         
         this.fairyManager = new RFGFairyManeger(wnd, this.fairyUnit, this);
 
         this.maxlife = this.life = 100;//初期ライフ
+        this.score.score = 10;//枚数
+        
     }
     
     //集中モード切替
@@ -128,7 +135,7 @@ class ReportFairyGame{
     function isCollision(obj1, obj2){
         var lay1;
         var lay2;
-        
+        var pos;
         
         for(var i = 0; i < obj1.lay.collisionLayers.count; i++)
         {
@@ -142,7 +149,7 @@ class ReportFairyGame{
                 if(lay1.width <= 0 || lay1.height <= 0 || lay2.width <= 0 || lay2.height <= 0) continue;
             
                 
-                var pos = new Array();
+                pos = new Array();
                 pos.add(%[]);
                 pos.add(%[]);
                 
@@ -170,11 +177,19 @@ class ReportFairyGame{
         }
     }
     
+    function writedReport(){
+        this.score.score--;
+    }
+    
     function finalize(){
         invalidate this.fairyManager;
         invalidate this.fairyUnit;
         invalidate this.frameUnit;
         invalidate this.mainLayer;
+        invalidate this.report;
+        invalidate this.lifebar;
+        invalidate this.score;
+
         kag.trigger("fairyend");
     }
 }

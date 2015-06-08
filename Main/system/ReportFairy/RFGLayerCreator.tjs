@@ -70,6 +70,21 @@ class RFGLayerCreator{
         return l_lay;
     }
 
+    function createScoreLayer(wnd, lay){
+        var s_lay = new RFGBasicLayer(wnd, lay);
+        s_lay.width = lay.width;
+        s_lay.height = 40;
+        s_lay.top = 0;
+        s_lay.left = 0;
+        
+        s_lay.font.height = 20;
+        
+        s_lay.hitThreshold = 256;
+        s_lay.visible = true;
+        
+        return s_lay;
+    }
+
     function createCollisionLayer(wnd, lay, x, y, width, height){
         var col_lay = new RFGBasicLayer(wnd, lay);
         col_lay.left = x;
