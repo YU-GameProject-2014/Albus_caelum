@@ -1,0 +1,31 @@
+class RFGScore extends RFGObject{
+   
+    var _score = 10;
+   
+    property score
+    {
+        setter(val){
+            this._score = val;
+            this.update();
+        }
+       
+        getter(){
+           return this._score;
+        }
+    }
+   
+    function RFGScore(wnd, lay, owner){
+        this.layer = RFGLayerCreator.createScoreLayer(wnd, lay);
+        this.update();
+    }
+   
+    function update(){
+        this.layer.colorRect(0, 0, this.layer.width, this.layer.height, 0x000000, -255);
+        this.layer.drawText(0, 0, "残り" + this.score + "枚", 0xFF0000);
+    }
+   
+    function finalize() {
+        super.finalize();
+		invalidate this.layer;
+    }
+}

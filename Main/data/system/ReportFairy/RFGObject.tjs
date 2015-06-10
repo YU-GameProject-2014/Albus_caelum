@@ -1,0 +1,27 @@
+/**
+ * ...
+ * @author 
+ */
+class  RFGObject extends RFGBasicObject
+{
+	var owner;
+	var timer;
+
+    function RFGObject(wnd, lay, owner = void) {
+	    super.RFGBasicObject(wnd, lay);
+	    this.owner = owner;
+        this.timer = new Timer(this, "action");//メモリリークの危険性
+        this.timer.enabled = false;
+    }
+	
+	
+	function action(ev){
+        
+    }
+
+    function finalize() {
+		super.finalize();
+        this.timer.enabled = false;
+        invalidate this.timer;
+    }
+}

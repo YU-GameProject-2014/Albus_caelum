@@ -1,0 +1,23 @@
+/**
+ * ...
+ * @author 
+ */
+class  RFGObjectManager
+{
+	var item;
+	var owner;
+	var timer;
+	
+	function addObject(obj) {
+		
+	}
+	
+	function startAll() {
+		
+	}
+	
+	function stopAll() {
+		
+	}
+	
+}

@@ -1,0 +1,20 @@
+class RFGLifebar extends RFGObject{
+   
+    var life = 10;
+    var maxlife = 10;
+    
+    function RFGLifebar(wnd, lay, owner){
+        this.layer = RFGLayerCreator.createLifebarLayer(wnd, lay);
+        this.update();
+    } 
+    
+    function update(){
+        this.layer.fillRect(0, 0, this.layer.width, this.layer.height, 0xFFFF0000);
+        this.layer.fillRect(0, 0, this.layer.width / this.maxlife * this.life, this.layer.height, 0xFFFFFF00);
+    }
+
+    function finalize(){
+        super.finalize();
+        invalidate this.layer;
+    }
+}

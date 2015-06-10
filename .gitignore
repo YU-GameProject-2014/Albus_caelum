@@ -7,4 +7,9 @@
 *.mp3
 *.ogg
 *.wave
+*.wav
+*.dll
+*.exe
+Main/plugin
+Main/savedata
 .DS_Store

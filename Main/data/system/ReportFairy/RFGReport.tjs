@@ -1,0 +1,55 @@
+class RFGReport extends RFGObject{
+    var speed = 2;
+    
+    function RFGReport(wnd, lay, owner){
+        super.RFGObject(wnd, lay, owner);
+        this.layer = RFGLayerCreator.createReportLayer(wnd, lay);
+        
+        this.defaultPos();
+        this.timer.interval = 10;
+        this.timer.enabled = true;
+    }
+    
+    function CR(){
+        this.layer.toRightLayer.left = 0;
+    }
+    
+    function LF(){
+        this.layer.toRightLayer.top += 10;
+        this.layer.toBottomLayer.top += 10;
+    }
+    
+    function CRLF(){
+        this.CR();
+        this.LF();
+    }
+    
+    function defaultPos(){
+        this.layer.toRightLayer.top = 0;
+        this.layer.toRightLayer.left = 0;
+        this.layer.toBottomLayer.top = 10;
+        this.layer.toBottomLayer.left = 0;
+    }
+    
+    function move(){
+        if (this.layer.toRightLayer.width < this.layer.toRightLayer.left) {
+            this.CRLF();
+            return;
+        }
+        if (this.layer.toRightLayer.height < this.layer.toRightLayer.top) {
+            this.owner.writedReport();
+            this.defaultPos();
+            return;
+        }
+        this.layer.toRightLayer.left += this.speed;
+    }
+
+    function action(ev){
+        this.move();
+    }
+    
+	function finalize() {
+		super.finalize();
+	    invalidate this.layer;
+	}
+}

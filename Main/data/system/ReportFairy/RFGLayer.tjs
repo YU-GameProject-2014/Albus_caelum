@@ -1,0 +1,35 @@
+/**
+ * ...
+ * @author 
+ */
+class RFGLayer extends RFGBasicLayer 
+{
+    var owner;//管理者
+    var collisionLayers = new Array();//衝突判定レイヤー配列
+
+    function RFGLayer(wnd, lay){
+        super.Layer(wnd, lay);
+    }
+	
+    function onClick(x, y){
+        /* 実際の処理はownerオブジェクトに委譲 */
+        if (this.owner === void) return;
+        if (typeof this.owner.onClick === 'undefined') return;
+        this.owner.onClick(x, y);
+    }
+
+    /* キー操作はownerオブジェクトに委譲 */
+    function onKeyDown(key, shift, process=true){
+        if (this.owner === void) return;
+        if (typeof this.owner.onKeyDown === 'undefined') return;
+        this.owner.onKeyDown(key, shift, process);
+    }
+
+    /* キー操作はownerオブジェクトに委譲 */
+    function onKeyUp(key, shift, process=true){
+        if (this.owner === void) return;
+        if (typeof this.owner.onKeyUp === 'undefined') return;
+        this.owner.onKeyUp(key, shift, process);
+    }    
+
+}

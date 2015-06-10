@@ -1,0 +1,42 @@
+// startup.tjs - スタートアップスクリプト
+// Copyright (C) 2001, W.Dee  改変・配布は自由です
+
+property _dummyProp { getter {} setter (v) {} }
+with(Window) {
+    &.innerSunken    = &_dummyProp;
+    &.showScrollBars = &_dummyProp;
+}
+Plugins.link("plugin/menu.dll");       // メニューを使わないなら不要
+Plugins.link("plugin/KAGParser.dll");  // KAGを使わない(!)なら不要
+
+// このスクリプトは一番最初に実行されるスクリプトです
+Scripts.execStorage("system/Initialize.tjs"); // system/Initialize.tjs を実行
+
+Scripts.execStorage("system/ReportFairy/RFGBasicLayer.tjs"); 
+Scripts.execStorage("system/ReportFairy/RFGLayer.tjs"); 
+Scripts.execStorage("system/ReportFairy/RFGBasicObject.tjs"); 
+Scripts.execStorage("system/ReportFairy/RFGObject.tjs"); 
+Scripts.execStorage("system/ReportFairy/ReportFairyGame.tjs"); 
+Scripts.execStorage("system/ReportFairy/RFGFairy.tjs"); 
+Scripts.execStorage("system/ReportFairy/RFGFairyManeger.tjs"); 
+Scripts.execStorage("system/ReportFairy/RFGReport.tjs"); 
+Scripts.execStorage("system/ReportFairy/RFGReportLayer.tjs"); 
+Scripts.execStorage("system/ReportFairy/RFGLifebar.tjs"); 
+Scripts.execStorage("system/ReportFairy/RFGLayerCreator.tjs"); 
+Scripts.execStorage("system/ReportFairy/RFGScore.tjs"); 
+
+
+
+
+var wnd = new Window();
+wnd.width=640;
+wnd.height=480;
+var lay = new Layer(wnd, null);
+lay.width=wnd.innerWidth;
+lay.height=wnd.innerHeight;
+
+lay.visible=true;
+wnd.visible=true;
+
+
+var reportGame = new ReportFairyGame(wnd, lay);

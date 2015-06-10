@@ -1,0 +1,16 @@
+/**
+ * ...
+ * @author 
+ */
+class  RFGBasicObject
+{
+	var layer;
+	
+	function RFGBasicObject(wnd, lay) {
+		
+	}
+	
+	function finalize() {
+		
+	}
+}

@@ -1,0 +1,25 @@
+class RFGReportLayer extends RFGLayer{
+    var toRightLayer;
+    var toBottomLayer;
+
+    function RFGReportLayer(wnd, lay){
+        super.RFGLayer(wnd, lay);
+        
+        this.loadImages("image/report.png");
+        this.setSizeToImageSize();
+        this.visible = true;
+        
+        this.toRightLayer = new global.RFGLayer(wnd, this);
+        this.toRightLayer.width = this.width;
+        this.toRightLayer.height = this.height;
+        this.toRightLayer.fillRect(0, 0, this.toRightLayer.width, this.toRightLayer.height, 0xFFFF7F7F);
+        this.toRightLayer.visible = true;
+
+        this.toBottomLayer = new global.RFGLayer(wnd, this);
+        this.toBottomLayer.width = this.width;
+        this.toBottomLayer.height = this.height;
+        this.toBottomLayer.fillRect(0, 0, this.toBottomLayer.width, this.toBottomLayer.height, 0xFF7FFFFF);
+        this.toBottomLayer.visible = true;
+    }
+}
+
