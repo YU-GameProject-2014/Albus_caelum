@@ -17,6 +17,9 @@ class ReportFairyGame {
 	var lifebarManager;
 	var scoreManager;
     
+	//array
+	var managers = [];
+	
 	var fairies; //array//未使用;
     var maxFairyNum;//未使用
  
@@ -39,12 +42,13 @@ class ReportFairyGame {
         this.lifebarUnit.bringToFront();
         this.scoreUnit.bringToFront();
         
-        this.fairyManager = new RFGFairyManager(wnd, this.fairyUnit, this);
-        this.frameManager = new RFGFrameManager(wnd, this.frameUnit, this);
-        this.lifebarManager = new RFGLifebarManager(wnd, this.frameUnit, this);
-        this.reportManager = new RFGReportManager(wnd, this.reportUnit, this);
-		this.scoreManager = new RFGScoreManager(wnd, this.scoreUnit, this);
+        this.managers.add(this.fairyManager = new RFGFairyManager(wnd, this.fairyUnit, this));
+        this.managers.add(this.frameManager = new RFGFrameManager(wnd, this.frameUnit, this));
+        this.managers.add(this.lifebarManager = new RFGLifebarManager(wnd, this.frameUnit, this));
+        this.managers.add(this.reportManager = new RFGReportManager(wnd, this.reportUnit, this));
+		this.managers.add(this.scoreManager = new RFGScoreManager(wnd, this.scoreUnit, this));
 
+		
 		
         this.lifebarManager.objects[0].maxlife = this.lifebarManager.objects[0].life = 100;//初期ライフ
         this.scoreManager.objects[0].score = 10;//枚数
@@ -67,7 +71,7 @@ class ReportFairyGame {
     
     
     /*
-     * キー操作はReportFairyが一元管理します
+     * キー操作はReportFairyGameが一元管理します
      */
     function onKeyDown(key, shift, process=true){
         switch(key){
@@ -75,7 +79,7 @@ class ReportFairyGame {
             break;
  
         case VK_X:
-            this.fairyManager.stopAll();
+            this.stopAllObjects();
             break;
  
         }
@@ -90,7 +94,7 @@ class ReportFairyGame {
             invalidate this;
             break;
         case VK_X:
-            this.fairyManager.startAll();
+            this.startAllObjects();
             break;
         case VK_C:
             this.fairyManager.killAll();
@@ -158,7 +162,21 @@ class ReportFairyGame {
             }
         }
     }
-    
+
+	function startAllObjects() {
+		for (var i = 0; i < this.managers.count; i++ )
+		{
+			this.managers[i].startAll();
+		}
+	}
+
+   	function stopAllObjects() {
+		for (var i = 0; i < this.managers.count; i++ )
+		{
+			this.managers[i].stopAll();
+		}
+	}
+
     function writedReport() {
         this.scoreManager.objects[0].score--;
     }
