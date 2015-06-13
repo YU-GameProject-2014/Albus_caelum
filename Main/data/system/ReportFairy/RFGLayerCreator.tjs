@@ -12,14 +12,14 @@ class RFGLayerCreator{
         return m_lay;
     }
 
-    function createFairyUnitLayer(wnd, lay){
-        var f_unit_lay;
-        f_unit_lay = new RFGLayer(wnd, lay);
-        f_unit_lay.width = lay.width;
-        f_unit_lay.height = lay.height;
-        f_unit_lay.visible = true;
+    function createUnitLayer(wnd, lay){
+        var unit_lay;
+        unit_lay = new RFGLayer(wnd, lay);
+        unit_lay.width = lay.width;
+        unit_lay.height = lay.height;
+        unit_lay.visible = true;
 
-        return f_unit_lay;
+        return unit_lay;
     }
 
     function createFairyLayer(wnd, lay, owner){

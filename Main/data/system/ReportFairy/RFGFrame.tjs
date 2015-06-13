@@ -1,0 +1,29 @@
+/**
+ * ...
+ * @author 
+ */
+class RFGFrame extends RFGObject{
+
+	var _visible = false;
+	
+	property visible
+	{
+		setter(val) {
+            this._visible = this.layer.visible = val;
+		}
+		
+		getter() {
+		    return _visible;
+		}
+		
+	}
+	
+    function RFGFrame(wnd, lay, owner){
+        this.layer = RFGLayerCreator.createFrameLayer(wnd, lay);
+    } 
+
+    function finalize(){
+        super.finalize();
+        invalidate this.layer;
+    }
+}

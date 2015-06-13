@@ -4,20 +4,54 @@
  */
 class  RFGObjectManager
 {
-	var item;
+	var objects = [];
 	var owner;
 	var timer;
+	var window;
+	var parentLayer;
+	
+	
+	function RFGObjectManager(wnd, lay, owner) {
+		this.window = wnd;
+		this.parentLayer = lay;
+		this.owner = owner;
+		
+		this.timer = new Timer(this, "action");
+		this.timer.enabled = false;
+	}
+	
 	
 	function addObject(obj) {
-		
+		this.objects.add(obj);
 	}
-	
-	function startAll() {
-		
+
+	function purgeObject(obj) {
+		this.objects.remove(obj);
+		invalidate obj;
 	}
-	
-	function stopAll() {
-		
-	}
-	
+
+    //全軍自決
+    function killAll(){
+		for (var i = 0; i < this.objects.count; i++)
+		{
+			this.purgeObject(this.objects[i]);
+			i--;//this.purgeObject()によって添え字が1つ詰められるため
+		}
+    }
+
+    //全軍突撃
+    function startAll(){
+		for (var i = 0; i < this.objects.count; i++)
+		{
+			this.objects[i].timer.enabled = true;
+		}
+    }
+    
+    //全軍停止
+    function stopAll() {
+		for (var i = 0; i < this.objects.count; i++)
+		{
+			this.objects[i].timer.enabled = false;
+		}
+    }
 }

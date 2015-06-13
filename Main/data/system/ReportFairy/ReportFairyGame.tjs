@@ -13,13 +13,13 @@ class ReportFairyGame {
 	//RFGObject
     var report; 
 	var fairy;//未使用
-	var frame;//未使用
+	var frame;
     var lifebar;
     var score;
     
     //RFGObjectManager
-	var reportManager;
-    var fairyManager;//未使用
+	var reportManager;//
+    var fairyManager;
 	var frameManager;//未使用
 	var lifebarManager;//未使用
 	var scoreManager;//未使用
@@ -59,21 +59,24 @@ class ReportFairyGame {
     function ReportFairyGame(wnd, lay){
         this.mainLayer  = RFGLayerCreator.createMainLayer(wnd, lay, this);
         
-		this.report = new RFGReport(wnd, this.mainLayer, this);
-        this.lifebar = new RFGLifebar(wnd, this.mainLayer);
-        this.score = new RFGScore(wnd, this.mainLayer);
-        
-		this.reportUnit = this.report.layer;
-        this.fairyUnit = RFGLayerCreator.createFairyUnitLayer(wnd, this.mainLayer);
-        this.frameUnit = RFGLayerCreator.createFrameLayer(wnd, this.mainLayer);
-        this.lifebarUnit = this.lifebar.layer;
-        this.scoreUnit = this.score.layer;
+		this.reportUnit = RFGLayerCreator.createUnitLayer(wnd, this.mainLayer);
+        this.fairyUnit = RFGLayerCreator.createUnitLayer(wnd, this.mainLayer);
+        //this.frameUnit = RFGLayerCreator.createFrameLayer(wnd, this.mainLayer);
+		this.frameUnit = RFGLayerCreator.createUnitLayer(wnd, this.mainLayer);
+		this.lifebarUnit = RFGLayerCreator.createUnitLayer(wnd, this.mainLayer);
+		this.scoreUnit = RFGLayerCreator.createUnitLayer(wnd, this.mainLayer);
         
         this.reportUnit.bringToFront();
 		this.fairyUnit.bringToFront();
         this.frameUnit.bringToFront();
         this.lifebarUnit.bringToFront();
         this.scoreUnit.bringToFront();
+
+		this.report = new RFGReport(wnd, this.reportUnit, this);
+        this.lifebar = new RFGLifebar(wnd, this.lifebarUnit );
+        this.score = new RFGScore(wnd, this.scoreUnit);
+		this.frame = new RFGFrame(wnd, this.frameUnit);
+
         
         this.fairyManager = new RFGFairyManeger(wnd, this.fairyUnit, this);
 
@@ -85,11 +88,11 @@ class ReportFairyGame {
     //集中モード切替
     function togleCrazyMode(){
         if (this.crazy === true) {
-            this.frameUnit.visible=false;
+            this.frame.visible=false;
             this.report.speed = 2;
             this.crazy = false;
         } else {
-            this.frameUnit.visible=true;
+            this.frame.visible=true;
             this.report.speed = 20;
             this.crazy = true;
         }

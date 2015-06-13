@@ -43,7 +43,7 @@ class RFGFairy extends RFGObject{
 
     //指導者に指示を仰ぐ
     function advice() {
-        return owner.consult(this);
+        return this.owner.consult(this);
     }
 
     function setVect(vx, vy){
