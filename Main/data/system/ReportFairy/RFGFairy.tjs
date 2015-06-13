@@ -29,10 +29,12 @@ class RFGFairy extends RFGObject{
             this.layer.parent.width  < this.layer.left|| this.layer.parent.height < this.layer.top
         ){
             this.suicide();
+			return;
         }
         
         if (this.advice()) {
             this.suicide();
+			return;
         }
     }
 
@@ -61,11 +63,11 @@ class RFGFairy extends RFGObject{
     }
 
     //自決
-    function suicide(){
-        this.timer.enabled = false;
-        this.enable = 0;
-        this.layer.visible = false;
-    }
+    //function suicide(){
+    //    this.timer.enabled = false;
+    //    this.enable = 0;
+    //    this.layer.visible = false;
+    //}
 
     function finalize(){
         super.finalize();

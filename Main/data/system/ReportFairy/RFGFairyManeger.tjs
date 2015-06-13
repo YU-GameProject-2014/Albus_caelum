@@ -13,22 +13,23 @@
 
         rand = new Math.RandomGenerator();
         
-        this.timer = new Timer(this, "action");//メモリリークの危険性
-        this.timer.interval = 1000;
+        
         this.timer.enabled = true;
     }
 
     //一定時間ごとに妖精を出現させる
     function action(ev) {
+		if (this.maxFairy <= this.objects.count) return; //生成上限数の処理
+		
 		popPosition();
-        var obj = new RFGFairy(this.window, this.parentLayer, owner);
+        var obj = new RFGFairy(this.window, this.parentLayer, this);
         obj.layer.setPos(x, y);//レイヤーの座標だけかえてもFairyオブジェクトの座標は変わらない
 		obj.x = x;//妖精の座標変更
 		obj.y = y;//妖精の座標変更
 		obj.layer.visible = true;
 		obj.setVectForCenter(1.25);//中央方向へ向かうようにする
 		obj.enable = 1;
-		objects.add(obj);
+		this.objects.add(obj);
     }
     
     //妖精のポップ位置を定める
@@ -55,8 +56,8 @@
     }
     
 	function consult(obj) {
-		//上位オブジェクトにたらいまわし
-		return this.owner.cousult(obj);
+		//相談を上位オブジェクトにたらいまわし
+		return this.owner.consult(obj);
 	}
     
     function finalize(){

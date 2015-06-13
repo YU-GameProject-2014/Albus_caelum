@@ -17,6 +17,7 @@ class  RFGObjectManager
 		this.owner = owner;
 		
 		this.timer = new Timer(this, "action");
+        this.timer.interval = 1000;
 		this.timer.enabled = false;
 	}
 	
@@ -28,6 +29,11 @@ class  RFGObjectManager
 	function purgeObject(obj) {
 		this.objects.remove(obj);
 		invalidate obj;
+	}
+	
+	function assistSuicide(obj) {
+		//自殺幇助
+		this.purgeObject(obj);
 	}
 
     //全軍自決

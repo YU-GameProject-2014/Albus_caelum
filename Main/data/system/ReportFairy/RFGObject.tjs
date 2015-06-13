@@ -18,6 +18,23 @@ class  RFGObject extends RFGBasicObject
 	function action(ev){
         
     }
+	
+	//自殺()
+    function suicide() {
+		//自殺前の身辺整理
+        this.timer.enabled = false;
+        this.enable = 0;
+        this.layer.visible = false;
+		
+		//自殺予告
+		this.suicideNotice();
+    }
+	
+	//親に自殺の手伝えと仄めかす
+	function suicideNotice() {
+		this.owner.assistSuicide(this);
+	}
+
 
     function finalize() {
 		super.finalize();
