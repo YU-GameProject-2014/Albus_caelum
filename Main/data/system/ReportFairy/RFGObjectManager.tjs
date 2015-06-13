@@ -60,4 +60,7 @@ class  RFGObjectManager
 			this.objects[i].timer.enabled = false;
 		}
     }
+	
+	function finalize() {
+	}
 }

@@ -18,7 +18,8 @@ class RFGFrame extends RFGObject{
 		
 	}
 	
-    function RFGFrame(wnd, lay, owner){
+    function RFGFrame(wnd, lay, owner) {
+		super.RFGObject(wnd, lay, owner);
         this.layer = RFGLayerCreator.createFrameLayer(wnd, lay);
     } 
 

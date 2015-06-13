@@ -198,13 +198,18 @@ class ReportFairyGame {
     }
     
     function finalize(){
-        invalidate this.fairyManager;
-        invalidate this.fairyUnit;
-        invalidate this.frameUnit;
-        invalidate this.mainLayer;
+		invalidate this.fairyManager;
         invalidate this.report;
         invalidate this.lifebar;
         invalidate this.score;
+        invalidate this.frame;
+        invalidate this.mainLayer;
+        invalidate reportUnit;
+        invalidate fairyUnit;
+        invalidate frameUnit;
+        invalidate lifebarUnit;
+        invalidate scoreUnit;		
+
 
         kag.trigger("fairyend");
     }

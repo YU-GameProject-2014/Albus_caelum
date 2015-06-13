@@ -14,7 +14,8 @@ class RFGScore extends RFGObject{
         }
     }
    
-    function RFGScore(wnd, lay, owner){
+    function RFGScore(wnd, lay, owner) {
+		super.RFGObject(wnd, lay, owner);
         this.layer = RFGLayerCreator.createScoreLayer(wnd, lay);
         this.update();
     }

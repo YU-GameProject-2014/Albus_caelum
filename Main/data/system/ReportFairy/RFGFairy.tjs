@@ -32,6 +32,7 @@ class RFGFairy extends RFGObject{
 			return;
         }
         
+		//移動後の処理を親に相談
         if (this.advice()) {
             this.suicide();
 			return;
@@ -61,13 +62,6 @@ class RFGFairy extends RFGObject{
         var dy = d * (parent_center_pos_y - this.y) / r;
         this.setVect(dx, dy);
     }
-
-    //自決
-    //function suicide(){
-    //    this.timer.enabled = false;
-    //    this.enable = 0;
-    //    this.layer.visible = false;
-    //}
 
     function finalize(){
         super.finalize();
