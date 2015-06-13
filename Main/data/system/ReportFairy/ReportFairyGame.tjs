@@ -10,58 +10,25 @@ class ReportFairyGame {
     var lifebarUnit;
     var scoreUnit;
     
-	//RFGObject
-    var report; 
-	var fairy;//未使用
-	var frame;
-    var lifebar;
-    var score;
-    
     //RFGObjectManager
-	var reportManager;//
+	var reportManager;
     var fairyManager;
-	var frameManager;//未使用
-	var lifebarManager;//未使用
-	var scoreManager;//未使用
+	var frameManager;
+	var lifebarManager;
+	var scoreManager;
     
-	//
 	var fairies; //array//未使用;
     var maxFairyNum;//未使用
  
+	//集中モード
     var crazy = false;
  
-    //var _score;
-    var _life;
-    var _maxlife;
-    
-    property life
-    {
-        setter(_life){
-            this.lifebar.life = _life;
-        }
-        
-        getter(){
-            return _life;
-        }
-    }
-
-    property maxlife
-    {
-        setter(_maxlife){
-            this.lifebar.maxlife = _maxlife;
-        }
-        
-        getter(){
-            return _maxlife;
-        }
-    }
     
     function ReportFairyGame(wnd, lay){
         this.mainLayer  = RFGLayerCreator.createMainLayer(wnd, lay, this);
         
 		this.reportUnit = RFGLayerCreator.createUnitLayer(wnd, this.mainLayer);
         this.fairyUnit = RFGLayerCreator.createUnitLayer(wnd, this.mainLayer);
-        //this.frameUnit = RFGLayerCreator.createFrameLayer(wnd, this.mainLayer);
 		this.frameUnit = RFGLayerCreator.createUnitLayer(wnd, this.mainLayer);
 		this.lifebarUnit = RFGLayerCreator.createUnitLayer(wnd, this.mainLayer);
 		this.scoreUnit = RFGLayerCreator.createUnitLayer(wnd, this.mainLayer);
@@ -71,29 +38,28 @@ class ReportFairyGame {
         this.frameUnit.bringToFront();
         this.lifebarUnit.bringToFront();
         this.scoreUnit.bringToFront();
-
-		this.report = new RFGReport(wnd, this.reportUnit, this);
-        this.lifebar = new RFGLifebar(wnd, this.lifebarUnit );
-        this.score = new RFGScore(wnd, this.scoreUnit);
-		this.frame = new RFGFrame(wnd, this.frameUnit);
-
         
-        this.fairyManager = new RFGFairyManeger(wnd, this.fairyUnit, this);
+        this.fairyManager = new RFGFairyManager(wnd, this.fairyUnit, this);
+        this.frameManager = new RFGFrameManager(wnd, this.frameUnit, this);
+        this.lifebarManager = new RFGLifebarManager(wnd, this.frameUnit, this);
+        this.reportManager = new RFGReportManager(wnd, this.reportUnit, this);
+		this.scoreManager = new RFGScoreManager(wnd, this.scoreUnit, this);
 
-        this.maxlife = this.life = 100;//初期ライフ
-        this.score.score = 10;//枚数
+		
+        this.lifebarManager.objects[0].maxlife = this.lifebarManager.objects[0].life = 100;//初期ライフ
+        this.scoreManager.objects[0].score = 10;//枚数
         
     }
     
     //集中モード切替
     function togleCrazyMode(){
         if (this.crazy === true) {
-            this.frame.visible=false;
-            this.report.speed = 2;
+            this.frameManager.objects[0].visible=false;
+            this.reportManager.objects[0].speed = 2;
             this.crazy = false;
         } else {
-            this.frame.visible=true;
-            this.report.speed = 20;
+            this.frameManager.objects[0].visible=true;
+            this.reportManager.objects[0].speed = 20;
             this.crazy = true;
         }
     }
@@ -137,15 +103,15 @@ class ReportFairyGame {
         //妖精オブジェクトからの相談
         if (obj instanceof "RFGFairy") {
             //衝突したと指示
-            if (this.isCollision(obj, this.report)) {
+            if (this.isCollision(obj, this.reportManager.objects[0])) {
                 //ライフ計算
-                this.lifebar.life--;
-                this.lifebar.update();
+                this.lifebarManager.objects[0].life--;
+                this.lifebarManager.objects[0].update();
 
                 return true;
             }
         }
-    }
+}
     
     //オブジェクト同士の接触判定
     function isCollision(obj1, obj2){
@@ -193,23 +159,22 @@ class ReportFairyGame {
         }
     }
     
-    function writedReport(){
-        this.score.score--;
+    function writedReport() {
+        this.scoreManager.objects[0].score--;
     }
     
     function finalize(){
 		invalidate this.fairyManager;
-        invalidate this.report;
-        invalidate this.lifebar;
-        invalidate this.score;
-        invalidate this.frame;
+		invalidate this.frameManager;
+		invalidate this.lifebarManager;
+		invalidate this.reportManager;
+		invalidate this.scoreManager;
+        invalidate this.reportUnit;
+        invalidate this.fairyUnit;
+        invalidate this.frameUnit;
+        invalidate this.lifebarUnit;
+        invalidate this.scoreUnit;		
         invalidate this.mainLayer;
-        invalidate reportUnit;
-        invalidate fairyUnit;
-        invalidate frameUnit;
-        invalidate lifebarUnit;
-        invalidate scoreUnit;		
-
 
         kag.trigger("fairyend");
     }

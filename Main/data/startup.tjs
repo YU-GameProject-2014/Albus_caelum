@@ -19,13 +19,17 @@ Scripts.execStorage("system/ReportFairy/RFGObject.tjs");
 Scripts.execStorage("system/ReportFairy/RFGObjectManager.tjs"); 
 Scripts.execStorage("system/ReportFairy/ReportFairyGame.tjs"); 
 Scripts.execStorage("system/ReportFairy/RFGFrame.tjs"); 
+Scripts.execStorage("system/ReportFairy/RFGFrameManager.tjs"); 
 Scripts.execStorage("system/ReportFairy/RFGFairy.tjs"); 
-Scripts.execStorage("system/ReportFairy/RFGFairyManeger.tjs"); 
+Scripts.execStorage("system/ReportFairy/RFGFairyManager.tjs"); 
 Scripts.execStorage("system/ReportFairy/RFGReport.tjs"); 
 Scripts.execStorage("system/ReportFairy/RFGReportLayer.tjs"); 
+Scripts.execStorage("system/ReportFairy/RFGReportManager.tjs"); 
 Scripts.execStorage("system/ReportFairy/RFGLifebar.tjs"); 
+Scripts.execStorage("system/ReportFairy/RFGLifebarManager.tjs"); 
 Scripts.execStorage("system/ReportFairy/RFGLayerCreator.tjs"); 
 Scripts.execStorage("system/ReportFairy/RFGScore.tjs"); 
+Scripts.execStorage("system/ReportFairy/RFGScoreManager.tjs"); 
 
 
 

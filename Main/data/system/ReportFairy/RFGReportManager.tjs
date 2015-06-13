@@ -1,0 +1,25 @@
+/**
+ * ...
+ * @author 
+ */
+class RFGReportManager extends RFGObjectManager{    
+
+	 function RFGReportManager(wnd, lay, owner) {
+		super.RFGObjectManager(wnd, lay, owner);
+		this.addObject(new RFGReport(this.window, this.parentLayer, this));
+	}
+    
+	function consult(obj) {
+		//相談を上位オブジェクトにたらいまわし
+		return this.owner.consult(obj);
+	}
+	
+	function writedReport() {
+		this.owner.writedReport();
+	}
+    
+    function finalize() {
+		super.finalize();
+    }
+}
+

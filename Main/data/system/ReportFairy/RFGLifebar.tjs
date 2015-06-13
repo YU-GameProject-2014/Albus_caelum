@@ -1,7 +1,32 @@
 class RFGLifebar extends RFGObject{
    
-    var life = 10;
-    var maxlife = 10;
+    var _life;
+    var _maxlife;
+    
+    property life
+    {
+    	setter(val){
+	        this._life = val;
+        }
+        
+        getter(){
+            return _life;
+			this.update();
+        }
+    }
+
+    property maxlife
+    {
+    	setter(val){
+	        this._maxlife = val;
+			this.update();
+        }
+        
+        getter(){
+            return _maxlife;
+        }
+    }
+
     
     function RFGLifebar(wnd, lay, owner) {
 		super.RFGObject(wnd, lay, owner);

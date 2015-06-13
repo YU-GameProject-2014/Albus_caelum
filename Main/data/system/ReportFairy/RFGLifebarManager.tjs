@@ -1,0 +1,22 @@
+/**
+ * ...
+ * @author 
+ */
+
+ class RFGLifebarManager extends RFGObjectManager{    
+
+	 function RFGLifebarManager(wnd, lay, owner) {
+		super.RFGObjectManager(wnd, lay, owner);
+		this.addObject(new RFGLifebar(this.window, this.parentLayer, this));
+	}
+    
+	function consult(obj) {
+		//相談を上位オブジェクトにたらいまわし
+		return this.owner.consult(obj);
+	}
+    
+    function finalize() {
+		super.finalize();
+    }
+}
+

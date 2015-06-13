@@ -1,14 +1,11 @@
 
- class RFGFairyManeger extends RFGObjectManager{    
-    var fairy;
+ class RFGFairyManager extends RFGObjectManager{    
     var x,y;            //妖精の初期出現位置
     var width,height;    //ウィンドウのサイズ
     var maxFairy = 20;
     var rand;
-    var wnd;
-  
     
-    function RFGFairyManeger(wnd, lay, owner) {
+    function RFGFairyManager(wnd, lay, owner) {
 		super.RFGObjectManager(wnd, lay, owner);
 
         rand = new Math.RandomGenerator();
@@ -62,7 +59,6 @@
     
     function finalize() {
 		super.finalize();
-		this.killAll();
     }
 }
 
