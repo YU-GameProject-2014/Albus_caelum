@@ -1,14 +1,13 @@
-
- class RFGFairyManager extends RFGObjectManager{    
-    var x,y;            //妖精の初期出現位置
-    var width,height;    //ウィンドウのサイズ
-    var maxFairy = 20;
+class RFGFairyManager extends RFGObjectManager{    
+    var maxFairy = 20;//妖精作成上限
     var rand;
+	var pattern; //生成パターン
     
     function RFGFairyManager(wnd, lay, owner) {
 		super.RFGObjectManager(wnd, lay, owner);
 
-        rand = new Math.RandomGenerator();
+        this.rand = new Math.RandomGenerator();
+		this.pattern = new RFGFairyGeneratePattern(this);
         
         
         this.timer.enabled = true;
@@ -16,42 +15,10 @@
 
     //一定時間ごとに妖精を出現させる
     function action(ev) {
-		if (this.maxFairy <= this.objects.count) return; //生成上限数の処理
-		
-		popPosition();
-        var obj = new RFGFairy(this.window, this.parentLayer, this);
-        obj.layer.setPos(x, y);//レイヤーの座標だけかえてもFairyオブジェクトの座標は変わらない
-		obj.x = x;//妖精の座標変更
-		obj.y = y;//妖精の座標変更
-		obj.layer.visible = true;
-		obj.setVectForCenter(1.25);//中央方向へ向かうようにする
-		obj.enable = 1;
-		this.objects.add(obj);
+		//生成をRFGFairyPatternクラスに委譲
+		this.pattern.action(ev);
     }
-    
-    //妖精のポップ位置を定める
-    function popPosition(){
-        var way = rand.random32() % 4;//0:上　1:右　2:下　3:左
-        switch(way){
-        case 0:
-            x=(int)(rand.random() * this.parentLayer.width);
-            y=0;
-            break;
-        case 1:
-            x=width - 10;
-            y=(int)(rand.random() * this.parentLayer.height);
-            break;
-        case 2:
-            x=(int)(rand.random() * this.parentLayer.width);
-            y=height - 10;
-            break;
-        case 3:
-            x=0;
-            y=(int)(rand.random() * this.parentLayer.height);
-            break;
-        }
-    }
-    
+
 	function consult(obj) {
 		//相談を上位オブジェクトにたらいまわし
 		return this.owner.consult(obj);

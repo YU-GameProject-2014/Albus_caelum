@@ -1,0 +1,54 @@
+/**
+ * ...
+ * @author 
+ */
+class RFGFairyGeneratePattern {
+	var manager; //RFGFairyManager
+    var x, y;            //妖精の初期出現位置
+    var width, height;    //ウィンドウのサイズ
+	var rand;
+	
+	function RFGFairyGeneratePattern(manager) {
+		this.manager = manager;
+        this.rand = new Math.RandomGenerator();
+	}
+
+    //一定時間ごとに妖精を出現させる
+    function action(ev) {
+		if (this.manager.maxFairy <= this.manager.objects.count) return; //生成上限数の処理
+		
+    	this.popPosition();
+        var obj = new RFGFairy(this.manager.window, this.manager.parentLayer, this.manager);
+        obj.layer.setPos(x, y);//レイヤーの座標だけかえてもFairyオブジェクトの座標は変わらない
+		obj.x = this.x;//妖精の座標変更
+		obj.y = this.y;//妖精の座標変更
+		obj.layer.visible = true;
+		obj.setVectForCenter(0.75);//中央方向へ向かうようにする
+		obj.enable = 1;
+		this.manager.addObject(obj);
+    }
+
+	
+    //妖精のポップ位置を定める
+    function popPosition(){
+        var way = rand.random32() % 4;//0:上　1:右　2:下　3:左
+        switch(way){
+        case 0:
+            x=(int)(this.rand.random() * this.manager.parentLayer.width);
+            y=0;
+            break;
+        case 1:
+            x=width - 10;
+            y=(int)(this.rand.random() * this.manager.parentLayer.height);
+            break;
+        case 2:
+            x=(int)(this.rand.random() * this.manager.parentLayer.width);
+            y=height - 10;
+            break;
+        case 3:
+            x=0;
+            y=(int)(this.rand.random() * this.manager.parentLayer.height);
+            break;
+        }
+    }
+}

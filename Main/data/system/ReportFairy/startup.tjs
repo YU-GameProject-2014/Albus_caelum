@@ -8,6 +8,7 @@ Scripts.execStorage("system/ReportFairy/RFGFrame.tjs");
 Scripts.execStorage("system/ReportFairy/RFGFrameManager.tjs"); 
 Scripts.execStorage("system/ReportFairy/RFGFairy.tjs"); 
 Scripts.execStorage("system/ReportFairy/RFGFairyManager.tjs"); 
+Scripts.execStorage("system/ReportFairy/RFGFairyGeneratePattern.tjs"); 
 Scripts.execStorage("system/ReportFairy/RFGReport.tjs"); 
 Scripts.execStorage("system/ReportFairy/RFGReportLayer.tjs"); 
 Scripts.execStorage("system/ReportFairy/RFGReportManager.tjs"); 
