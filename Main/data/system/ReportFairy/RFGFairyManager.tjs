@@ -1,14 +1,11 @@
 class RFGFairyManager extends RFGObjectManager{    
-    var maxFairy = 20;//妖精作成上限
-    var rand;
+    var maxFairy = 300;//妖精作成上限
 	var pattern; //生成パターン
     
     function RFGFairyManager(wnd, lay, owner) {
 		super.RFGObjectManager(wnd, lay, owner);
 
-        this.rand = new Math.RandomGenerator();
 		this.pattern = new RFGFairyGeneratePattern(this);
-        
         
         this.timer.enabled = true;
     }
@@ -26,6 +23,7 @@ class RFGFairyManager extends RFGObjectManager{
     
     function finalize() {
 		super.finalize();
+		invalidate this.pattern;
     }
 }
 

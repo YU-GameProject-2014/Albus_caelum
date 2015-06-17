@@ -7,19 +7,27 @@ class RFGFairyGeneratePattern {
     var x, y;            //妖精の初期出現位置
     var width, height;    //ウィンドウのサイズ
 	var rand;
+	var timer;
+	var counts = [];
+	
 	
 	function RFGFairyGeneratePattern(manager) {
 		this.manager = manager;
         this.rand = new Math.RandomGenerator();
+		this.counts = [1000, 0.01, 0.01, 0.01, 0.01, 0.01, 2000, 2000, 2000, 2000, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1];
+		this.manager.timer.interval = this.counts.shift();
+		this.width = this.manager.parentLayer.width;
+		this.height = this.manager.parentLayer.height;
 	}
 
     //一定時間ごとに妖精を出現させる
     function action(ev) {
 		if (this.manager.maxFairy <= this.manager.objects.count) return; //生成上限数の処理
-		
-    	this.popPosition();
-        var obj = new RFGFairy(this.manager.window, this.manager.parentLayer, this.manager);
-        obj.layer.setPos(x, y);//レイヤーの座標だけかえてもFairyオブジェクトの座標は変わらない
+		this.manager.timer.interval = this.counts.shift();
+
+		this.popPosition();
+		var obj = new RFGFairy(this.manager.window, this.manager.parentLayer, this.manager);
+		obj.layer.setPos(x, y);//レイヤーの座標だけかえてもFairyオブジェクトの座標は変わらない
 		obj.x = this.x;//妖精の座標変更
 		obj.y = this.y;//妖精の座標変更
 		obj.layer.visible = true;
@@ -51,4 +59,8 @@ class RFGFairyGeneratePattern {
             break;
         }
     }
+	
+	function finalize() {
+		invalidate this.rand;
+	}
 }

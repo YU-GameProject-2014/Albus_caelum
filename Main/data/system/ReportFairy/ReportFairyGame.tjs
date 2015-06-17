@@ -91,7 +91,7 @@ class ReportFairyGame {
             this.togleCrazyMode();
             break;
         case VK_ESCAPE:
-            invalidate this;
+            this.exit();
             break;
         case VK_X:
             this.startAllObjects();
@@ -180,6 +180,10 @@ class ReportFairyGame {
     function writedReport() {
         this.scoreManager.objects[0].score--;
     }
+	
+	function exit() {
+        kag.trigger("fairyend");
+	}
     
     function finalize(){
 		invalidate this.fairyManager;
@@ -193,7 +197,5 @@ class ReportFairyGame {
         invalidate this.lifebarUnit;
         invalidate this.scoreUnit;		
         invalidate this.mainLayer;
-
-        kag.trigger("fairyend");
     }
 }

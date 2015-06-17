@@ -13,4 +13,7 @@ Scripts.execStorage("system/ReportFairy/startup.tjs");
 var reportGame = new ReportFairyGame(kag, kag.primaryLayer);
 [endscript]
 [waittrig name="fairyend"]
+[iscript]
+invalidate reportGame;
+[endscript]
 
