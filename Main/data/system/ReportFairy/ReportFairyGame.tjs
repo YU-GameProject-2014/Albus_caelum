@@ -19,6 +19,8 @@ class ReportFairyGame {
     
 	//array
 	var managers = [];
+	var onKeyDownEvents = %[];
+	var onKeyUpEvents = %[];
 	
 	var fairies; //array//未使用;
     var maxFairyNum;//未使用
@@ -52,7 +54,14 @@ class ReportFairyGame {
 		
         this.lifebarManager.objects[0].maxlife = this.lifebarManager.objects[0].life = 100;//初期ライフ
         this.scoreManager.objects[0].score = 10;//枚数
-        
+
+	
+		//キー入力ハンドラ登録
+		this.onKeyDownEvents[VK_X] = function(key) { this.stopAllObjects(); } incontextof this;
+		this.onKeyUpEvents[VK_Z] = function(key) { this.togleCrazyMode(); } incontextof this;
+		this.onKeyUpEvents[VK_ESCAPE] = function(key) { this.exit(); } incontextof this;
+		this.onKeyUpEvents[VK_X] = function(key) { this.startAllObjects(); } incontextof this;
+		this.onKeyUpEvents[VK_C] = function(key) { this.fairyManager.killAll(); } incontextof this;
     }
     
     //集中モード切替
@@ -73,33 +82,12 @@ class ReportFairyGame {
     /*
      * キー操作はReportFairyGameが一元管理します
      */
-    function onKeyDown(key, shift, process=true){
-        switch(key){
-        case VK_Z:
-            break;
- 
-        case VK_X:
-            this.stopAllObjects();
-            break;
- 
-        }
+    function onKeyDown(key, shift, process = true) {
+		this.onKeyDownEvents[key] !== void ? this.onKeyDownEvents[key](key) : null;
     }
 
-    function onKeyUp(key, shift, process=true){
-        switch(key){
-        case VK_Z:
-            this.togleCrazyMode();
-            break;
-        case VK_ESCAPE:
-            this.exit();
-            break;
-        case VK_X:
-            this.startAllObjects();
-            break;
-        case VK_C:
-            this.fairyManager.killAll();
-            break;
-        }
+    function onKeyUp(key, shift, process = true) {
+		this.onKeyUpEvents[key] !== void ? this.onKeyUpEvents[key](key) : null;
     }
     
     //弟子に相談される
@@ -182,6 +170,13 @@ class ReportFairyGame {
     }
 	
 	function exit() {
+		this.reportManager.stopAll();
+		this.fairyManager.stopAll();
+		this.frameManager.stopAll();
+		this.lifebarManager.stopAll();
+		this.scoreManager.stopAll();
+		this.mainLayer.visible = false;
+		
         kag.trigger("fairyend");
 	}
     
