@@ -1,4 +1,5 @@
-class RFGLayerCreator{
+class RFGLayerCreator {
+
     function createMainLayer(wnd, lay, owner){
         var m_lay = new RFGLayer(wnd, lay);
         m_lay.owner = owner;
@@ -46,6 +47,14 @@ class RFGLayerCreator{
         
         return f_lay;
     }
+
+    function createBlankFrameLayer(wnd, lay){
+        var blank_lay = RFGLayerCreator.createFrameLayer(wnd, lay);
+		blank_lay.colorRect(0, 0, blank_lay.width, blank_lay.height, 0x000000, -255);
+		
+        return blank_lay;
+    }
+
     
     function createReportLayer(wnd, lay){
         var r_lay = new RFGReportLayer(wnd, lay);

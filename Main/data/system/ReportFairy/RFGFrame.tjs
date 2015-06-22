@@ -5,11 +5,25 @@
 class RFGFrame extends RFGObject{
 
 	var _visible = false;
+	var blankLayer;
 	
 	property visible
 	{
 		setter(val) {
-            this._visible = this.layer.visible = val;
+	        if (this._visible === true) {
+	            this._visible = val;
+				this.layer.visible = true;
+				this.blankLayer.visible = true;
+				this.blankLayer.stopTransition();
+	            this.layer.beginTransition("universal", true, this.blankLayer, % [vague:100, time:2000, rule:"rule/rule.png"]);
+	        } else {
+	            this._visible = val;
+				this.layer.visible = false;
+				this.blankLayer.visible = true;
+				this.layer.stopTransition();
+	            this.blankLayer.beginTransition("universal", true, this.layer, % [vague:100, time:2000, rule:"rule/rule.png"]);
+			}
+
 		}
 		
 		getter() {
@@ -21,7 +35,23 @@ class RFGFrame extends RFGObject{
     function RFGFrame(wnd, lay, owner) {
 		super.RFGObject(wnd, lay, owner);
         this.layer = RFGLayerCreator.createFrameLayer(wnd, lay);
+		this.blankLayer = RFGLayerCreator.createBlankFrameLayer(wnd, lay);
+		this.configure();
     } 
+	
+	function configure() {
+		//トランジション設定
+		//
+		this.layer.onTransitionCompleted = function(){
+			this.layer.visible = false;
+			this.blankLayer.visible = true;
+		} incontextof this;
+
+		this.blankLayer.onTransitionCompleted = function(){
+			this.layer.visible=true;
+			this.blankLayer.visible=false;
+		} incontextof this;
+	}
 
     function finalize(){
         super.finalize();
