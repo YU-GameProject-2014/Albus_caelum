@@ -13,15 +13,15 @@ class RFGFrame extends RFGObject{
 	        if (this._visible === true) {
 	            this._visible = val;
 				this.layer.visible = true;
-				this.blankLayer.visible = true;
+            	this.blankLayer.visible = false;
 				this.blankLayer.stopTransition();
-	            this.layer.beginTransition("universal", true, this.blankLayer, % [vague:100, time:2000, rule:"rule/rule.png"]);
+	            this.layer.beginTransition("universal", true, this.blankLayer, % [vague:100, time:250, rule:"rule/rule.png"]);
 	        } else {
 	            this._visible = val;
 				this.layer.visible = false;
 				this.blankLayer.visible = true;
 				this.layer.stopTransition();
-	            this.blankLayer.beginTransition("universal", true, this.layer, % [vague:100, time:2000, rule:"rule/rule.png"]);
+	            this.blankLayer.beginTransition("universal", true, this.layer, % [vague:100, time:500, rule:"rule/rule.png"]);
 			}
 
 		}

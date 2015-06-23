@@ -4,16 +4,11 @@ class RFGFairyManager extends RFGObjectManager{
     
     function RFGFairyManager(wnd, lay, owner) {
 		super.RFGObjectManager(wnd, lay, owner);
-
+		
+		//妖精の作成はRFGFairyGeneratePatternに委譲
 		this.pattern = new RFGFairyGeneratePattern(this);
         
-        this.timer.enabled = true;
-    }
-
-    //一定時間ごとに妖精を出現させる
-    function action(ev) {
-		//生成をRFGFairyPatternクラスに委譲
-		this.pattern.action(ev);
+        //this.timer.enabled = true;
     }
 
 	function consult(obj) {
