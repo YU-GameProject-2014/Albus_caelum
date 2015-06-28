@@ -11,12 +11,6 @@ class RFGLayer extends RFGBasicLayer
         super.Layer(wnd, lay);
     }
 	
-    function onClick(x, y){
-        /* 実際の処理はownerオブジェクトに委譲 */
-        if (this.owner === void) return;
-        if (typeof this.owner.onClick === 'undefined') return;
-        this.owner.onClick(x, y);
-    }
 
     /* キー操作はownerオブジェクトに委譲 */
     function onKeyDown(key, shift, process=true){
@@ -25,11 +19,24 @@ class RFGLayer extends RFGBasicLayer
         this.owner.onKeyDown(key, shift, process);
     }
 
-    /* キー操作はownerオブジェクトに委譲 */
     function onKeyUp(key, shift, process=true){
         if (this.owner === void) return;
         if (typeof this.owner.onKeyUp === 'undefined') return;
         this.owner.onKeyUp(key, shift, process);
     }    
 
+    /* マウス操作はownerオブジェクトに委譲 */
+    function onMouseEnter(){
+        if (this.owner === void) return;
+        if (typeof this.owner.onMouseEnter === 'undefined') return;
+        this.owner.onMouseEnter();
+    }    
+
+    function onClick(x, y){
+        if (this.owner === void) return;
+        if (typeof this.owner.onClick === 'undefined') return;
+        this.owner.onClick(x, y);
+    }
+
+	
 }

@@ -34,7 +34,7 @@ class RFGFairyGeneratePattern {
 		obj.x = this.x;//妖精の座標変更
 		obj.y = this.y;//妖精の座標変更
 		obj.layer.visible = true;
-		obj.setVectForCenter(0.75);//中央方向へ向かうようにする
+		obj.setVectForCenter(0.25);//中央方向へ向かうようにする
 		obj.enable = 1;
 		this.manager.addObject(obj);
 

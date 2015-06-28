@@ -3,6 +3,7 @@ class RFGFairy extends RFGObject{
     var vx, vy;   //速度ベクトル
     var enable;   //生死
     var layer;      //RFGFairyLayer
+	var hp = 5;//とりあえず実装, 将来的にはHPオブジェクトに分離予定
     
     function RFGFairy(wnd, lay, owner) {
 		super.RFGObject(wnd, lay, owner);
@@ -14,9 +15,9 @@ class RFGFairy extends RFGObject{
         this.timer.enabled = true;
     }
     
-    function onClick(x, y){
-        this.layer.opacity = 128;
-        this.layer.hitThreshold = 256;
+    function onMouseEnter() {
+		this.hp--;//とりあえず実装, 将来的にはHPオブジェクトに分離予定
+		if(this.hp <= 0) this.onKilled();
     }
     
     function move(dx, dy){
@@ -39,6 +40,12 @@ class RFGFairy extends RFGObject{
         }
     }
 
+	//死んでしまった時の処理
+	function onKilled() {
+        this.layer.opacity = 128;
+        this.layer.hitThreshold = 256;
+	}
+	
     //一定時間ごとに妖精が作動する
     function action(ev){
         if(this.enable) this.move(vx, vy);
