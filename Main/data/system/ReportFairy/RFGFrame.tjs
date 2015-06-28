@@ -1,12 +1,15 @@
 /**
- * ...
- * @author 
+ * 集中モードの枠となる物体クラス
+ * @author gewalt01
  */
 class RFGFrame extends RFGObject{
 
 	var _visible = false;
 	var blankLayer;
 	
+	/**
+	 * フレームを表示/非表示(変化時トランジションする)
+	 */
 	property visible
 	{
 		setter(val) {
@@ -32,6 +35,12 @@ class RFGFrame extends RFGObject{
 		
 	}
 	
+	/**
+	 * コンストラクタ
+	 * @param	wnd   描画ウインドウオブジェクト
+	 * @param	lay   親レイヤー
+	 * @param	owner 管理者
+	 */
     function RFGFrame(wnd, lay, owner) {
 		super.RFGObject(wnd, lay, owner);
         this.layer = RFGLayerCreator.createFrameLayer(wnd, lay);
@@ -39,6 +48,9 @@ class RFGFrame extends RFGObject{
 		this.configure();
     } 
 	
+	/**
+	 * 集中モード枠初期化設定
+	 */
 	function configure() {
 		//トランジション設定
 		//

@@ -1,6 +1,6 @@
 /**
- * ...
- * @author 
+ * 妖精生成パターンクラス
+ * @author gewalt01
  */
 class RFGFairyGeneratePattern {
 	var manager; //RFGFairyManager
@@ -10,7 +10,10 @@ class RFGFairyGeneratePattern {
 	var timer;
 	var counts = [];
 	
-	
+	/**
+	 * コンストラクタ
+	 * @param	manager RFGFaryManagerオブジェクト
+	 */
 	function RFGFairyGeneratePattern(manager) {
 		this.manager = manager;
         this.rand = new Math.RandomGenerator();
@@ -23,7 +26,10 @@ class RFGFairyGeneratePattern {
 		this.height = this.manager.parentLayer.height;
 	}
 
-    //一定時間ごとに妖精を出現させる
+    /**
+     * 一定時間ごとに妖精を出現させる
+     * @param	ev
+     */
     function action(ev) {
 		if (this.manager.maxFairy <= this.manager.objects.count) return; //生成上限数の処理
 		
@@ -51,7 +57,9 @@ class RFGFairyGeneratePattern {
     }
 
 	
-    //妖精のポップ位置を定める
+    /**
+     * 妖精のポップ位置を定める
+     */
     function popPosition(){
         var way = rand.random32() % 4;//0:上　1:右　2:下　3:左
         switch(way){
@@ -74,6 +82,9 @@ class RFGFairyGeneratePattern {
         }
     }
 	
+	/**
+	 * finalize
+	 */
 	function finalize() {
 		invalidate this.rand;
 		invalidate this.timer;

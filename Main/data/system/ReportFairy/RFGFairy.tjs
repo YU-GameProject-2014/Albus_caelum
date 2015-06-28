@@ -1,3 +1,7 @@
+/**
+ * 妖精本体となるクラス
+ * @author gewalt01
+ */
 class RFGFairy extends RFGObject{
     var x, y;     //座標
     var vx, vy;   //速度ベクトル
@@ -5,6 +9,12 @@ class RFGFairy extends RFGObject{
     var layer;      //RFGFairyLayer
 	var hp = 5;//とりあえず実装, 将来的にはHPオブジェクトに分離予定
     
+	/**
+	 * コンストラクタ, レイヤー作成とタイマーの設定
+	 * @param	wnd   描画するウインドウオブジェクト
+	 * @param	lay   親となるレイヤー
+	 * @param	owner 妖精オブジェクトの管理者
+	 */
     function RFGFairy(wnd, lay, owner) {
 		super.RFGObject(wnd, lay, owner);
         //this.layer.parentがNULLになる可能性あり
@@ -15,11 +25,19 @@ class RFGFairy extends RFGObject{
         this.timer.enabled = true;
     }
     
+	/**
+	 * マウスヒット時の処理, 初期状態では妖精へのダメージ処理
+	 */
     function onMouseEnter() {
 		this.hp--;//とりあえず実装, 将来的にはHPオブジェクトに分離予定
 		if(this.hp <= 0) this.onKilled();
     }
     
+	/**
+	 * 妖精オブジェクトの移動
+	 * @param	dx x方向移動量
+	 * @param	dy y方向移動量
+	 */
     function move(dx, dy){
         this.x += dx;
         this.y += dy;
@@ -40,27 +58,44 @@ class RFGFairy extends RFGObject{
         }
     }
 
-	//死んでしまった時の処理
+	/**
+	 * 妖精が死んでしまった時の処理
+	 */
 	function onKilled() {
+		//現在はあたり判定無効化して半透明にする処理を
         this.layer.opacity = 128;
         this.layer.hitThreshold = 256;
 	}
 	
-    //一定時間ごとに妖精が作動する
+    /**
+     * タイマーイベント
+     * @param	ev イベントパラメータ
+     */
     function action(ev){
         if(this.enable) this.move(vx, vy);
     }
 
-    //指導者に指示を仰ぐ
+    /**
+     * 管理者オブジェクトに自身の状況を報告, 操作を管理者にゆだねる
+     */
     function advice() {
         return this.owner.consult(this);
     }
 
+	/**
+	 * 速度ベクトル設定
+	 * @param	vx x方向速度
+	 * @param	vy y方向速度
+	 */
     function setVect(vx, vy){
         this.vx = vx;
         this.vy = vy;
     }
 
+	/**
+	 * 中心方向へ向かうようベクトルを設定
+	 * @param	d 速度
+	 */
     function setVectForCenter(d){
         var parent_center_pos_x = this.layer.parent.width / 2;
         var parent_center_pos_y = this.layer.parent.height / 2;
@@ -70,6 +105,9 @@ class RFGFairy extends RFGObject{
         this.setVect(dx, dy);
     }
 
+	/**
+	 * finalize
+	 */
     function finalize(){
         super.finalize();
         invalidate this.layer;

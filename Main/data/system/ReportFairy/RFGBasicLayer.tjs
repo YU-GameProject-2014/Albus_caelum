@@ -1,14 +1,16 @@
-/*
+/**
  * 絶対座標を扱えるようにしたレイヤー
+ * @author gewalt01
  */
-
 class RFGBasicLayer extends Layer{
     
     function RFGBasicLayer(wnd, lay){
         super.Layer(wnd, lay);
     }
     
-        
+    /**
+     * プライマリレイヤからの左端絶対位置
+     */    
     property boundingLeft
     {
         getter()
@@ -17,6 +19,9 @@ class RFGBasicLayer extends Layer{
         }
     }
 
+    /**
+     * プライマリレイヤからの上端絶対位置
+     */    
     property boundingTop
     {
         getter()
@@ -25,6 +30,9 @@ class RFGBasicLayer extends Layer{
         }
     }
 
+    /**
+     * 親レイヤのプライマリレイヤからの左端絶対位置
+     */    
     property boundingParentLeft
     {
         getter()
@@ -41,6 +49,9 @@ class RFGBasicLayer extends Layer{
         }
     }
 
+    /**
+     * 親レイヤのプライマリレイヤからの上端絶対位置
+     */    
     property boundingParentTop
     {
         getter()
@@ -57,12 +68,17 @@ class RFGBasicLayer extends Layer{
         }
     }
 
-    
+    /**
+     * 上下左右中央揃え
+     */
     function setPosCenter(){
         this.left = (this.parent.width  - this.width ) / 2; //両端揃え;
         this.top  = (this.parent.height - this.height) / 2; //中央揃え;
     }
 	
+	/**
+	 * finalize
+	 */
 	function finalize() {
 		
 	}

@@ -1,5 +1,14 @@
+/**
+ * レイヤー作成ファクトリメソッド群
+ */
 class RFGLayerCreator {
 
+	/**
+	 * レポートの妖精ゲームのメインレイヤー
+	 * @param	wnd   描画ウインドウオブジェクト
+	 * @param	lay   親レイヤー
+	 * @param	owner 管理者
+	 */
     function createMainLayer(wnd, lay, owner){
         var m_lay = new RFGLayer(wnd, lay);
         m_lay.owner = owner;
@@ -13,6 +22,11 @@ class RFGLayerCreator {
         return m_lay;
     }
 
+	/**
+	 * レポート層, 妖精層, フレーム層などに分離するための層レイヤー
+	 * @param	wnd
+	 * @param	lay
+	 */
     function createUnitLayer(wnd, lay){
         var unit_lay;
         unit_lay = new RFGLayer(wnd, lay);
@@ -23,6 +37,12 @@ class RFGLayerCreator {
         return unit_lay;
     }
 
+	/**
+	 * 妖精レイヤー作成
+	 * @param	wnd   描画ウインドウオブジェクト
+	 * @param	lay   親レイヤー
+	 * @param	owner 管理者
+	 */
     function createFairyLayer(wnd, lay, owner){
         var f_lay = new RFGLayer(wnd, lay);
         f_lay.owner = owner;//メモリリークの危険性
@@ -36,6 +56,11 @@ class RFGLayerCreator {
         return f_lay;
     }
 
+	/**
+	 * 集中枠レイヤー作成
+	 * @param	wnd   描画ウインドウオブジェクト
+	 * @param	lay   親レイヤー
+	 */
     function createFrameLayer(wnd, lay){
         var f_lay = new RFGLayer(wnd, lay);
         f_lay.width=wnd.innerWidth;
@@ -48,6 +73,12 @@ class RFGLayerCreator {
         return f_lay;
     }
 
+	/**
+	 * 集中枠空白レイヤー作成(トランジション処理用)
+	 * @param	wnd   描画ウインドウオブジェクト
+	 * @param	lay   親レイヤー
+	 */
+
     function createBlankFrameLayer(wnd, lay){
         var blank_lay = RFGLayerCreator.createFrameLayer(wnd, lay);
 		blank_lay.colorRect(0, 0, blank_lay.width, blank_lay.height, 0x000000, -255);
@@ -56,6 +87,11 @@ class RFGLayerCreator {
     }
 
     
+	/**
+	 * レポートレイヤー作成
+	 * @param	wnd   描画ウインドウオブジェクト
+	 * @param	lay   親レイヤー
+	 */
     function createReportLayer(wnd, lay){
         var r_lay = new RFGReportLayer(wnd, lay);
         r_lay.setPosCenter();
@@ -66,7 +102,11 @@ class RFGLayerCreator {
         return r_lay;
     }
 
-
+	/**
+	 * レポートのライフバーレイヤー作成
+	 * @param	wnd   描画ウインドウオブジェクト
+	 * @param	lay   親レイヤー
+	 */
     function createLifebarLayer(wnd, lay){
         var l_lay = new RFGLayer(wnd, lay);
         l_lay.width = 400;
@@ -79,6 +119,11 @@ class RFGLayerCreator {
         return l_lay;
     }
 
+	/**
+	 * 残枚数レイヤー作成
+	 * @param	wnd   描画ウインドウオブジェクト
+	 * @param	lay   親レイヤー
+	 */
     function createScoreLayer(wnd, lay){
         var s_lay = new RFGLayer(wnd, lay);
         s_lay.width = lay.width;
@@ -94,6 +139,15 @@ class RFGLayerCreator {
         return s_lay;
     }
 
+	/**
+	 * 衝突判定レイヤー作成
+	 * @param	wnd   描画ウインドウオブジェクト
+	 * @param	lay   親レイヤー
+	 * @param	x      xオフセット
+	 * @param	y      yオフセット
+	 * @param	width  幅
+	 * @param	height 高さ
+	 */
     function createCollisionLayer(wnd, lay, x, y, width, height){
         var col_lay = new RFGLayer(wnd, lay);
         col_lay.left = x;
@@ -108,6 +162,11 @@ class RFGLayerCreator {
         return col_lay;
     }
     
+	/**
+	 * 妖精の衝突判定レイヤー作成
+	 * @param	wnd   描画ウインドウオブジェクト
+	 * @param	lay   親レイヤー
+	 */
     function createFairyAtariLayer(wnd, lay){
         var a_lay = RFGLayerCreator.createCollisionLayer(wnd, lay, 0, 0, 50, 80);
         a_lay.setPosCenter();
@@ -115,6 +174,11 @@ class RFGLayerCreator {
         return a_lay;
     }
 
+	/**
+	 * レポートの衝突判定レイヤー作成
+	 * @param	wnd   描画ウインドウオブジェクト
+	 * @param	lay   親レイヤー
+	 */
     function createReportAtariLayer(wnd, lay){
         var a_lay = new RFGLayer(wnd, lay);
         a_lay.width  = a_lay.parent.width  * 0.500;

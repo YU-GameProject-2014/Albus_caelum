@@ -1,20 +1,32 @@
 /**
- * ...
+ * 集中モード枠オブジェクト管理クラス
  * @author 
  */
 
  class RFGFrameManager extends RFGObjectManager{    
-
+	/**
+	 * コンストラクタ
+	 * @param	wnd   描画ウインドウオブジェクト
+	 * @param	lay   親レイヤー
+	 * @param	owner 管理者
+	 */
 	 function RFGFrameManager(wnd, lay, owner) {
 		super.RFGObjectManager(wnd, lay, owner);
 		this.addObject(new RFGFrame(this.window, this.parentLayer, this));
 	}
     
+	/**
+	 * 集中モード枠オブジェクトに関する判断を管理者にゆだねる
+	 * @param	obj RFGFairyオブジェクト
+	 */
 	function consult(obj) {
 		//相談を上位オブジェクトにたらいまわし
 		return this.owner.consult(obj);
 	}
     
+	/**
+	 * finalize
+	 */
     function finalize() {
 		super.finalize();
     }

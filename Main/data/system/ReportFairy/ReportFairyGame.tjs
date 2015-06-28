@@ -1,5 +1,6 @@
-/*
- *レポートの妖精ゲーム本体
+/**
+ * レポートの妖精ゲーム本体
+ * @author gewalt01
  */
 class ReportFairyGame {
 	//Layer
@@ -28,7 +29,11 @@ class ReportFairyGame {
 	//集中モード
     var crazy = false;
  
-    
+    /**
+     * コンストラクタ, 描画レイヤーと物体の作成, キー操作登録等の初期化処理
+     * @param	wnd 描画するウインドウオブジェクト
+     * @param	lay 親レイヤー
+     */
     function ReportFairyGame(wnd, lay){
         this.mainLayer  = RFGLayerCreator.createMainLayer(wnd, lay, this);
         
@@ -64,7 +69,9 @@ class ReportFairyGame {
 		this.onKeyUpEvents[VK_C] = function(key) { this.fairyManager.killAll(); } incontextof this;
     }
     
-    //集中モード切替
+    /**
+     * 集中モード切り替え
+     */
     function togleCrazyMode(){
         if (this.crazy === true) {
             this.frameManager.objects[0].visible=false;
@@ -82,15 +89,32 @@ class ReportFairyGame {
     /*
      * キー操作はReportFairyGameが一元管理します
      */
+	/**
+	 * キーが押された時の処理
+	 * @param	key
+	 * @param	shift
+	 * @param	process = true
+	 */
     function onKeyDown(key, shift, process = true) {
+		//登録したキーイベントハンドラを実行
 		this.onKeyDownEvents[key] !== void ? this.onKeyDownEvents[key](key) : null;
     }
 
+	/**
+	 * キーが離された時の処理
+	 * @param	key
+	 * @param	shift
+	 * @param	process = true
+	 */
     function onKeyUp(key, shift, process = true) {
+		//登録したキーイベントハンドラを実行
 		this.onKeyUpEvents[key] !== void ? this.onKeyUpEvents[key](key) : null;
     }
     
-    //弟子に相談される
+    /**
+     * 他オブジェクトからの処理判断依頼
+     * @param	obj
+     */
     function consult(obj){
         //妖精オブジェクトからの相談
         if (obj instanceof "RFGFairy") {
@@ -105,7 +129,11 @@ class ReportFairyGame {
         }
 }
     
-    //オブジェクト同士の接触判定
+    /**
+     * 物体同士の接触判定 
+     * @param	obj1 RFGObject
+     * @param	obj2 RFGObject
+     */
     function isCollision(obj1, obj2){
         var lay1;
         var lay2;
@@ -151,6 +179,9 @@ class ReportFairyGame {
         }
     }
 
+	/**
+	 * すべての物体の動作させる
+	 */
 	function startAllObjects() {
 		for (var i = 0; i < this.managers.count; i++ )
 		{
@@ -158,6 +189,9 @@ class ReportFairyGame {
 		}
 	}
 
+	/**
+	 * すべての物体の動作の停止
+	 */
    	function stopAllObjects() {
 		for (var i = 0; i < this.managers.count; i++ )
 		{
@@ -165,10 +199,16 @@ class ReportFairyGame {
 		}
 	}
 
+	/**
+	 * レポートが1毎書き終わる
+	 */
     function writedReport() {
         this.scoreManager.objects[0].score--;
     }
 	
+	/**
+	 * ゲーム終了
+	 */
 	function exit() {
 		this.reportManager.stopAll();
 		this.fairyManager.stopAll();
@@ -180,6 +220,9 @@ class ReportFairyGame {
         kag.trigger("fairyend");
 	}
     
+	/**
+	 * finalize
+	 */
     function finalize(){
 		invalidate this.fairyManager;
 		invalidate this.frameManager;
