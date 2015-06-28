@@ -65,6 +65,9 @@ class RFGFairy extends RFGObject{
 		//現在はあたり判定無効化して半透明にする処理を
         this.layer.opacity = 128;
         this.layer.hitThreshold = 256;
+		
+		//ダメージを与えられなくする
+		this.atack = function() { return false; };
 	}
 	
     /**
@@ -104,6 +107,10 @@ class RFGFairy extends RFGObject{
         var dy = d * (parent_center_pos_y - this.y) / r;
         this.setVect(dx, dy);
     }
+	
+	function atack(obj) {
+	    return true;	
+	}
 
 	/**
 	 * finalize

@@ -119,7 +119,8 @@ class ReportFairyGame {
         //妖精オブジェクトからの相談
         if (obj instanceof "RFGFairy") {
             //衝突したと指示
-            if (this.isCollision(obj, this.reportManager.objects[0])) {
+			//妖精オブジェクトが攻撃可能か判定
+            if (this.isCollision(obj, this.reportManager.objects[0]) && obj.atack()) {
                 //ライフ計算
                 this.lifebarManager.objects[0].life--;
                 this.lifebarManager.objects[0].update();
