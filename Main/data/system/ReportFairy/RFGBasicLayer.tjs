@@ -84,9 +84,9 @@ class RFGBasicLayer extends Layer{
 	 * @param	src    合成元レイヤ
 	 */
 	function operateFillRect(offx, offy, width, height, src){
-		for(var i=offx; i<width; i+=src.width)
+		for(var i=offx; i<width + offx; i+=src.width)
 		{
-			for(var j=offy; j<height; j+=src.height)
+			for(var j=offy; j<height + offy; j+=src.height)
 			{
 				lay.operateRect(i, j, src, 0, 0, Math.min(src.width, width - i), Math.min(src.height, height - j), omAuto, 255);
 			}
