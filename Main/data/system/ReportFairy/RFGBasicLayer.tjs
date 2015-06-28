@@ -75,6 +75,23 @@ class RFGBasicLayer extends Layer{
         this.left = (this.parent.width  - this.width ) / 2; //両端揃え;
         this.top  = (this.parent.height - this.height) / 2; //中央揃え;
     }
+	/**
+	 * 自身を合成先として合成元レイヤで合成する
+	 * @param	offx   xオフセット
+	 * @param	offy   yオフセット
+	 * @param   width  幅
+	 * @param   height 高さ
+	 * @param	src    合成元レイヤ
+	 */
+	function operateFillRect(offx, offy, width, height, src){
+		for(var i=offx; i<width; i+=src.width)
+		{
+			for(var j=offy; j<height; j+=src.height)
+			{
+				lay.operateRect(i, j, src, 0, 0, Math.min(src.width, width - i), Math.min(src.height, height - j), omAuto, 255);
+			}
+		}
+	}
 	
 	/**
 	 * finalize
