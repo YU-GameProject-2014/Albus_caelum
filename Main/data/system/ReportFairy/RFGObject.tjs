@@ -1,5 +1,5 @@
 /**
- * ...
+ * レポート妖精ゲームの物体クラスのひな形
  * @author 
  */
 class  RFGObject extends RFGBasicObject
@@ -7,6 +7,12 @@ class  RFGObject extends RFGBasicObject
 	var owner;
 	var timer;
 
+	/**
+	 * 
+	 * @param	wnd          ウインドウオブジェクト
+	 * @param	lay          親レイヤー
+	 * @param	owner = void 管理者
+	 */
     function RFGObject(wnd, lay, owner = void) {
 	    super.RFGBasicObject(wnd, lay);
 	    this.owner = owner;
@@ -14,12 +20,17 @@ class  RFGObject extends RFGBasicObject
         this.timer.enabled = false;
     }
 	
-	
+	/**
+	 * タイマーイベントハンドラ
+	 * @param	ev
+	 */
 	function action(ev){
         
     }
 	
-	//自殺()
+	/**
+	 * オブジェクトの自殺()
+	 */
     function suicide() {
 		//自殺前の身辺整理
         this.timer.enabled = false;
@@ -30,12 +41,17 @@ class  RFGObject extends RFGBasicObject
 		this.suicideNotice();
     }
 	
-	//親に自殺の手伝えと仄めかす
+	/**
+	 * 親に自殺の手伝えと仄めかす
+	 * 親に殺してもらう
+	 */
 	function suicideNotice() {
 		this.owner.assistSuicide(this);
 	}
 
-
+	/**
+	 * finalize
+	 */
     function finalize() {
 		super.finalize();
         this.timer.enabled = false;

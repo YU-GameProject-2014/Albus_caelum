@@ -1,10 +1,10 @@
 /**
- * ...
- * @author 
+ * スコアオブジェクト管理クラス
+ * @author gewalt01
  */
 class RFGScoreManager extends RFGObjectManager{    
 
-	 function RFGScoreManager(wnd, lay, owner) {
+	function RFGScoreManager(wnd, lay, owner) {
 		super.RFGObjectManager(wnd, lay, owner);
 		this.addObject(new RFGScore(this.window, this.parentLayer, this));
 	}

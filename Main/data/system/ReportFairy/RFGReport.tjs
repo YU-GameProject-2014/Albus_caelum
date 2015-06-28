@@ -1,6 +1,16 @@
+/**
+ * レポートクラス
+ * @author gewalt01
+ */
 class RFGReport extends RFGObject{
     var speed = 2;
     
+	/**
+	 * 
+	 * @param	wnd   ウインドウオブジェクト
+	 * @param	lay   親レイヤー
+	 * @param	owner 管理者
+	 */
     function RFGReport(wnd, lay, owner){
         super.RFGObject(wnd, lay, owner);
         this.layer = RFGLayerCreator.createReportLayer(wnd, lay);
@@ -10,20 +20,32 @@ class RFGReport extends RFGObject{
         this.timer.enabled = true;
     }
     
+	/**
+	 * レポートカーソルを左端へ送る
+	 */
     function CR(){
         this.layer.toRightLayer.left = 0;
     }
     
+	/**
+	 * レポートを1行書き上げる
+	 */
     function LF(){
         this.layer.toRightLayer.top += 10;
         this.layer.toBottomLayer.top += 10;
     }
     
+	/**
+	 * レポートを改行する
+	 */
     function CRLF(){
         this.CR();
         this.LF();
     }
     
+	/**
+	 * 初期位置の設定
+	 */
     function defaultPos(){
         this.layer.toRightLayer.top = 0;
         this.layer.toRightLayer.left = 0;
@@ -31,23 +53,34 @@ class RFGReport extends RFGObject{
         this.layer.toBottomLayer.left = 0;
     }
     
+	/**
+	 * レポートを書き進める
+	 */
     function move(){
         if (this.layer.toRightLayer.width < this.layer.toRightLayer.left) {
             this.CRLF();
             return;
         }
         if (this.layer.toRightLayer.height < this.layer.toRightLayer.top) {
-            this.owner.writedReport();
+            //管理者にレポートを1枚書いたことを通知
+			this.owner.writedReport();
             this.defaultPos();
             return;
         }
         this.layer.toRightLayer.left += this.speed;
     }
 
+	/**
+	 * タイマーイベントハンドラ
+	 * @param	ev
+	 */
     function action(ev){
         this.move();
     }
     
+	/**
+	 * finalize
+	 */
 	function finalize() {
 		super.finalize();
 	    invalidate this.layer;

@@ -1,6 +1,6 @@
 /**
- * ...
- * @author 
+ * 物体管理クラス
+ * @author gewalt01
  */
 class  RFGObjectManager
 {
@@ -10,7 +10,12 @@ class  RFGObjectManager
 	var window;
 	var parentLayer;
 	
-	
+	/**
+	 * 
+	 * @param	wnd   ウインドウオブジェクト
+	 * @param	lay   親レイヤー
+	 * @param	owner 管理者
+	 */
 	function RFGObjectManager(wnd, lay, owner) {
 		this.window = wnd;
 		this.parentLayer = lay;
@@ -21,22 +26,35 @@ class  RFGObjectManager
 		this.timer.enabled = false;
 	}
 	
-	
+	/**
+	 * オブジェクト追加
+	 * @param	obj
+	 */
 	function addObject(obj) {
 		this.objects.add(obj);
 	}
 
+	/**
+	 * オブジェクト破棄
+	 * @param	obj 削除対象オブジェクト
+	 */
 	function purgeObject(obj) {
 		this.objects.remove(obj);
 		invalidate obj;
 	}
 	
+	/**
+	 * 物体の破棄依頼が来たときのイベントハンドラ
+	 * @param	obj 自殺志願物体
+	 */
 	function assistSuicide(obj) {
 		//自殺幇助
 		this.purgeObject(obj);
 	}
 
-    //全軍自決
+    /**
+     * 全物体破棄
+     */
     function killAll(){
 		for (var i = 0; i < this.objects.count; i++)
 		{
@@ -45,7 +63,9 @@ class  RFGObjectManager
 		}
     }
 
-    //全軍突撃
+    /**
+     * 全物体動作可能にする
+     */
     function startAll(){
 		for (var i = 0; i < this.objects.count; i++)
 		{
@@ -55,7 +75,9 @@ class  RFGObjectManager
 		this.timer.enabled = true;
     }
     
-    //全軍停止
+    /**
+     * 全物体停止
+     */
     function stopAll() {
 		for (var i = 0; i < this.objects.count; i++)
 		{

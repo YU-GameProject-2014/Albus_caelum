@@ -1,3 +1,6 @@
+/**
+ * レポートレイヤークラス
+ */
 class RFGReportLayer extends RFGLayer{
     var toRightLayer;
     var toBottomLayer;

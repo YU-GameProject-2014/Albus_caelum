@@ -1,3 +1,4 @@
+//全クラスファイルロード
 Scripts.execStorage("system/ReportFairy/RFGBasicLayer.tjs"); 
 Scripts.execStorage("system/ReportFairy/RFGLayer.tjs"); 
 Scripts.execStorage("system/ReportFairy/RFGBasicObject.tjs"); 

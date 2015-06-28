@@ -1,3 +1,7 @@
+/**
+ * 残り枚数スコアクラス
+ * @author gewalt01
+ */
 class RFGScore extends RFGObject{
    
     var _score = 10;
@@ -20,6 +24,9 @@ class RFGScore extends RFGObject{
         this.update();
     }
    
+	/**
+	 * 残り枚数の描画
+	 */
     function update(){
         this.layer.colorRect(0, 0, this.layer.width, this.layer.height, 0x000000, -255);
         this.layer.drawText(0, 0, "残り" + this.score + "枚", 0xFF0000);

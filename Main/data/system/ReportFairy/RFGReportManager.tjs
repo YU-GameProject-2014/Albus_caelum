@@ -1,10 +1,15 @@
 /**
- * ...
- * @author 
+ * レポートオブジェクト管理クラス
+ * @author gewalt01
  */
 class RFGReportManager extends RFGObjectManager{    
-
-	 function RFGReportManager(wnd, lay, owner) {
+	/**
+	 * 
+	 * @param	wnd   ウインドウオブジェクト
+	 * @param	lay   親レイヤー
+	 * @param	owner 管理者
+	 */
+	function RFGReportManager(wnd, lay, owner) {
 		super.RFGObjectManager(wnd, lay, owner);
 		this.addObject(new RFGReport(this.window, this.parentLayer, this));
 	}
@@ -14,10 +19,16 @@ class RFGReportManager extends RFGObjectManager{
 		return this.owner.consult(obj);
 	}
 	
+	/**
+	 * レポートを1毎書き進めたことを管理者に通知
+	 */
 	function writedReport() {
 		this.owner.writedReport();
 	}
     
+	/**
+	 * finalize
+	 */
     function finalize() {
 		super.finalize();
     }
