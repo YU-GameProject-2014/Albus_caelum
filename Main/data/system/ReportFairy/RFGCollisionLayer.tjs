@@ -4,14 +4,14 @@
  */
 class  RFGCollisionLayer extends RFGBasicLayer
 {
-	var owner; //管理者
+	var owner; //管理者 //双方向参照やめるかもしれない
 	var areas = new Array(); //衝突判定領域配列[x, y, width, height]
 	
 	/**
 	 * コンストラクタ
-	 * @param	wnd
-	 * @param	lay
-	 * @param	owner
+	 * @param	wnd   ウインドウオブジェクト
+	 * @param	lay   親レイヤ
+	 * @param	owner 管理者
 	 */
 	function RFGCollisionLayer(wnd, lay, owner) {
 		super.RFGBasicLayer(wnd, lay);
@@ -28,11 +28,16 @@ class  RFGCollisionLayer extends RFGBasicLayer
 	 */
 	function addArea(x, y, width, height)
 	{
-		this.areas.add([x, y, width, height]);
+		var area = % [];
+		area["x"]      = x;
+		area["y"]      = y;
+		area["width"]  = width;
+		area["height"] = height;
+		this.areas.add(area);
 	}
 	
 	/**
-	 * 衝突判定 //まだつくってないよ
+	 * 衝突判定 //まだできてないよ
 	 * @param	collay 判定対象となるRFGCollisionLayerオブジェクト
 	 */
 	function isCollision(collay) {
@@ -40,35 +45,31 @@ class  RFGCollisionLayer extends RFGBasicLayer
         {
             for(var j = 0; j < collay.areas.count; j++)
             {
-                lay1 = obj1.layer.collisionLayers[i];
-                lay2 = obj2.layer.collisionLayers[j];
-                
-                
-                //サイズが不正なレイヤーの処理はしない
-                if(lay1.width <= 0 || lay1.height <= 0 || lay2.width <= 0 || lay2.height <= 0) continue;
+                 
+                //サイズが不正な領域の処理はしない
+                if(this.areas[i]["width"] <= 0 || this.areas[i]["height"]  <= 0 || collay.areas[j]["width"]  <= 0 || this.areas[j]["height"]  <= 0) continue;
             
                 
                 pos = new Array();
                 pos.add(%[]);
                 pos.add(%[]);
                 
-                //親レイヤーからはみ出してる部分を無視
-                pos[0]["left"]   = 0 < lay1.left ? lay1.boundingLeft : lay1.boundingParentLeft;
-                pos[0]["right"]  = lay1.left + lay1.width < lay1.parent.width ? lay1.boundingLeft + lay1.width : lay1.boundingParentLeft + lay1.parent.width;
-                pos[0]["top"]    = 0 < lay1.top ? lay1.boundingTop : lay1.boundingParentTop;
-                pos[0]["bottom"] = lay1.top + lay1.height < lay1.parent.height ? lay1.boundingTop + lay1.height : lay1.boundingParentTop + lay1.parent.height;
+                //レイヤーからはみ出してる部分を無視
+                pos[0]["left"]   = 0 < this.areas[i]["x"] ?  this.boundingLeft + this.areas[i]["x"] : this.boundingLeft;
+                pos[0]["right"]  = this.areas[i]["x"] + this.areas[i]["width"] < this.width ? this.boundingLeft + this.areas[i]["x"] + this.areas[i]["width"] : this.boundingLeft + this.width;
+                pos[0]["top"]    = 0 < this.areas[i]["y"] ?  this.boundingTop + this.areas[i]["y"] : this.boundingTop;
+                pos[0]["bottom"] = this.areas[i]["y"] + this.areas[i]["height"] < this.height ? this.boundingTop + this.areas[i]["y"] + this.areas[i]["height"] : this.boundingTop + this.height;
 
-                pos[1]["left"]   = 0 < lay2.left ? lay2.boundingLeft : lay2.boundingParentLeft;
-                pos[1]["right"]  = lay2.left + lay2.width < lay2.parent.width ? lay2.boundingLeft + lay2.width : lay2.boundingParentLeft + lay2.parent.width;
-                pos[1]["top"]    = 0 < lay2.top ? lay2.boundingTop : lay2.boundingParentTop;
-                pos[1]["bottom"] = lay2.top + lay2.height < lay2.parent.height ? lay2.boundingTop + lay2.height : lay2.boundingParentTop + lay2.parent.height;
+                pos[0]["left"]   = 0 < collay.areas[j]["x"] ?  this.boundingLeft + collay.areas[j]["x"] : this.boundingLeft;
+                pos[1]["right"]  = collay.areas[j]["x"] + collay.areas[j]["width"] < this.width ? this.boundingLeft + collay.areas[j]["x"] + collay.areas[j]["width"] : this.boundingLeft + this.width;
+                pos[2]["top"]    = 0 < collay.areas[j]["y"] ?  this.boundingTop + collay.areas[j]["y"] : this.boundingTop;
+                pos[3]["bottom"] = collay.areas[j]["y"] + collay.areas[j]["height"] < this.height ? this.boundingTop + collay.areas[j]["y"] + collay.areas[j]["height"] : this.boundingTop + this.height;
 
                 //衝突判定
                 if( (pos[0]["left"] < pos[1]["right"] ) &&
                     (pos[1]["left"] < pos[0]["right"] ) &&
                     (pos[0]["top"]  < pos[1]["bottom"]) &&
                     (pos[1]["top"]  < pos[0]["bottom"]) ) {
-
     
                     return true;
                 }
