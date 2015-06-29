@@ -10,11 +10,12 @@ class RFGLifebar extends RFGObject{
     {
     	setter(val){
 	        this._life = val;
+			this.update();
+			if (this._life <= 0) this.onNoLife();
         }
         
         getter(){
             return _life;
-			this.update();
         }
     }
 
@@ -44,6 +45,13 @@ class RFGLifebar extends RFGObject{
         this.layer.fillRect(0, 0, this.layer.width, this.layer.height, 0xFFFF0000);
         this.layer.fillRect(0, 0, this.layer.width / this.maxlife * this.life, this.layer.height, 0xFFFFFF00);
     }
+	
+	/**
+	 * ライフがなくなった時の処理
+	 */
+	function onNoLife() {
+		this.owner.onNoLife();
+	}
 
     function finalize(){
         super.finalize();

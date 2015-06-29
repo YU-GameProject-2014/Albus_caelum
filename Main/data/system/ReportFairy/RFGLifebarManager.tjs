@@ -14,6 +14,13 @@
 		//相談を上位オブジェクトにたらいまわし
 		return this.owner.consult(obj);
 	}
+	
+	/**
+	 * ライフがなくなった時の処理
+	 */
+	function onNoLife() {
+		this.owner.onNoLife();
+	}
     
     function finalize() {
 		super.finalize();

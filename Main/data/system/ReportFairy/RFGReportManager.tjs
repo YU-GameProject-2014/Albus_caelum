@@ -27,6 +27,13 @@ class RFGReportManager extends RFGObjectManager{
 	}
     
 	/**
+	 * レポート完成時処理
+	 */
+	function onFinishReport() {
+		this.owner.onFinishReport();
+	}
+	 
+	/**
 	 * finalize
 	 */
     function finalize() {

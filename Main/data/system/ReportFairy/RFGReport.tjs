@@ -4,6 +4,7 @@
  */
 class RFGReport extends RFGObject{
     var speed = 2;
+	var num   = 10; //残り枚数
     
 	/**
 	 * 
@@ -58,26 +59,40 @@ class RFGReport extends RFGObject{
 	/**
 	 * レポートを書き進める
 	 */
-    function move(){
+    function write(){
         if (this.layer.toRightLayer.width < this.layer.toRightLayer.left) {
             this.CRLF();
             return;
         }
-        if (this.layer.toRightLayer.height < this.layer.toRightLayer.top) {
+        
+		if (this.layer.toRightLayer.height < this.layer.toRightLayer.top) {
             //管理者にレポートを1枚書いたことを通知
 			this.owner.writedReport();
             this.defaultPos();
             return;
         }
         this.layer.toRightLayer.left += this.speed;
+		
     }
+
+	/**
+	 * レポート完成時処理
+	 */
+	function onFinishReport(){
+		this.owner.onFinishReport();
+	}
 
 	/**
 	 * タイマーイベントハンドラ
 	 * @param	ev
 	 */
     function action(ev){
-        this.move();
+        this.write();
+
+		if (this.num <= 0) {
+			this.timer.enabled = false;
+			this.onFinishReport();
+		}
     }
     
 	/**

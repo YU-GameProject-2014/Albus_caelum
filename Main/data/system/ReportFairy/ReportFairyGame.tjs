@@ -57,8 +57,8 @@ class ReportFairyGame {
 
 		
 		
-        this.lifebarManager.objects[0].maxlife = this.lifebarManager.objects[0].life = 100;//初期ライフ
-        this.scoreManager.objects[0].score = 10;//枚数
+        this.lifebarManager.objects[0].maxlife = this.lifebarManager.objects[0].life = 10;//初期ライフ
+        this.scoreManager.objects[0].score = this.reportManager.objects[0].num = 2;//枚数
 
 	
 		//キー入力ハンドラ登録
@@ -154,8 +154,25 @@ class ReportFairyGame {
 	 * レポートが1毎書き終わる
 	 */
     function writedReport() {
-        this.scoreManager.objects[0].score--;
+        this.scoreManager.objects[0].score = --this.reportManager.objects[0].num;
     }
+	
+	/**
+	 * レポート完成
+	 */
+	function onFinishReport() {
+		this.stopAllObjects();
+		System.inform("complite");
+	}
+
+	/**
+	 * ライフ0
+	 */
+	function onNoLife() {
+		this.stopAllObjects();
+		System.inform("failed");
+	}
+
 	
 	/**
 	 * ゲーム終了
