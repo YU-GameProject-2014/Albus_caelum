@@ -5,7 +5,6 @@
 class RFGLayer extends RFGBasicLayer 
 {
     var owner;//管理者
-    var collisionLayers = new Array();//衝突判定レイヤー配列
 
 	/**
 	 * コンストラクタ

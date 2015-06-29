@@ -6,6 +6,7 @@ class  RFGCollisionLayer extends RFGBasicLayer
 {
 	var owner; //管理者 //双方向参照やめるかもしれない
 	var areas = new Array(); //衝突判定領域配列[x, y, width, height]
+	var enable; //有効かどうか
 	
 	/**
 	 * コンストラクタ
@@ -17,6 +18,8 @@ class  RFGCollisionLayer extends RFGBasicLayer
 		super.RFGBasicLayer(wnd, lay);
 		this.owner = owner;
 		this.visible = false;
+		this.enable = false;
+        this.hitThreshold = 256;
 	}
 	
 	/**
@@ -34,6 +37,8 @@ class  RFGCollisionLayer extends RFGBasicLayer
 		area["width"]  = width;
 		area["height"] = height;
 		this.areas.add(area);
+		
+		this.drawArea();
 	}
 	
 	/**
@@ -41,6 +46,8 @@ class  RFGCollisionLayer extends RFGBasicLayer
 	 * @param	collay 判定対象となるRFGCollisionLayerオブジェクト
 	 */
 	function isCollision(collay) {
+		if (this.enable === false) return;
+		
         for(var i = 0; i < this.areas.count; i++)
         {
             for(var j = 0; j < collay.areas.count; j++)
@@ -50,7 +57,7 @@ class  RFGCollisionLayer extends RFGBasicLayer
                 if(this.areas[i]["width"] <= 0 || this.areas[i]["height"]  <= 0 || collay.areas[j]["width"]  <= 0 || this.areas[j]["height"]  <= 0) continue;
             
                 
-                pos = new Array();
+                var pos = new Array();
                 pos.add(%[]);
                 pos.add(%[]);
                 
@@ -60,21 +67,36 @@ class  RFGCollisionLayer extends RFGBasicLayer
                 pos[0]["top"]    = 0 < this.areas[i]["y"] ?  this.boundingTop + this.areas[i]["y"] : this.boundingTop;
                 pos[0]["bottom"] = this.areas[i]["y"] + this.areas[i]["height"] < this.height ? this.boundingTop + this.areas[i]["y"] + this.areas[i]["height"] : this.boundingTop + this.height;
 
-                pos[0]["left"]   = 0 < collay.areas[j]["x"] ?  this.boundingLeft + collay.areas[j]["x"] : this.boundingLeft;
-                pos[1]["right"]  = collay.areas[j]["x"] + collay.areas[j]["width"] < this.width ? this.boundingLeft + collay.areas[j]["x"] + collay.areas[j]["width"] : this.boundingLeft + this.width;
-                pos[2]["top"]    = 0 < collay.areas[j]["y"] ?  this.boundingTop + collay.areas[j]["y"] : this.boundingTop;
-                pos[3]["bottom"] = collay.areas[j]["y"] + collay.areas[j]["height"] < this.height ? this.boundingTop + collay.areas[j]["y"] + collay.areas[j]["height"] : this.boundingTop + this.height;
+                pos[1]["left"]   = 0 < collay.areas[j]["x"] ?  collay.boundingLeft + collay.areas[j]["x"] : collay.boundingLeft;
+                pos[1]["right"]  = collay.areas[j]["x"] + collay.areas[j]["width"] < collay.width ? collay.boundingLeft + collay.areas[j]["x"] + collay.areas[j]["width"] : collay.boundingLeft + collay.width;
+                pos[1]["top"]    = 0 < collay.areas[j]["y"] ?  collay.boundingTop + collay.areas[j]["y"] : collay.boundingTop;
+                pos[1]["bottom"] = collay.areas[j]["y"] + collay.areas[j]["height"] < collay.height ? collay.boundingTop + collay.areas[j]["y"] + collay.areas[j]["height"] : collay.boundingTop + collay.height;
 
                 //衝突判定
                 if( (pos[0]["left"] < pos[1]["right"] ) &&
                     (pos[1]["left"] < pos[0]["right"] ) &&
                     (pos[0]["top"]  < pos[1]["bottom"]) &&
                     (pos[1]["top"]  < pos[0]["bottom"]) ) {
-    
+
                     return true;
                 }
             }
         }
-
+	}
+	
+	/**
+	 * 衝突領域の描画
+	 */
+	function drawArea() {
+		this.colorRect(0, 0, this.width, this.height, 0x000000, -255);
+		
+		for (var i = 0; i < this.areas.count; i++ )
+		{
+			this.fillRect(this.areas[i]["x"], 
+			              this.areas[i]["y"], 
+			              this.areas[i]["width"], 
+						  this.areas[i]["height"], 
+						  0x7F00FF00);
+		}
 	}
 }

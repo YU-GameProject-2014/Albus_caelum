@@ -8,6 +8,7 @@ class RFGFairy extends RFGObject{
     var enable;   //生死
     var layer;      //RFGFairyLayer
 	var hp = 5;//とりあえず実装, 将来的にはHPオブジェクトに分離予定
+	var collisionLayer;
     
 	/**
 	 * コンストラクタ, レイヤー作成とタイマーの設定
@@ -19,6 +20,8 @@ class RFGFairy extends RFGObject{
 		super.RFGObject(wnd, lay, owner);
         //this.layer.parentがNULLになる可能性あり
         this.layer = RFGLayerCreator.createFairyLayer(wnd, lay, this);
+		this.collisionLayer = RFGLayerCreator.createFairyCollisionLayer(wnd, this.layer, this);
+		this.collisionLayer.visible = true;
         this.setVect(0, 0);
         this.enable=0;
         this.timer.interval = 1000/60;
@@ -42,7 +45,32 @@ class RFGFairy extends RFGObject{
         this.x += dx;
         this.y += dy;
         this.layer.setPos(this.x, this.y);
-        
+    }
+
+	/**
+	 * 妖精が死んでしまった時の処理
+	 */
+	function onKilled() {
+		//現在はあたり判定無効化して半透明にする処理を
+        this.layer.opacity = 128;
+        this.layer.hitThreshold = 256;
+		
+		//ダメージを与えられなくする
+		this.atack = function() { return false; };
+		
+		//衝突判定無効化
+		this.collisionLayer.enable = false;
+	}
+	
+    /**
+     * タイマーイベント
+     * @param	ev イベントパラメータ
+     */
+    function action(ev){
+        if (this.enable === false) return;
+
+		this.move(vx, vy);
+
         //画面からはみ出たら消滅
         if (this.layer.left + this.layer.width < 0 || this.layer.top  + this.layer.height < 0 ||
             this.layer.parent.width  < this.layer.left|| this.layer.parent.height < this.layer.top
@@ -56,26 +84,7 @@ class RFGFairy extends RFGObject{
             this.suicide();
 			return;
         }
-    }
 
-	/**
-	 * 妖精が死んでしまった時の処理
-	 */
-	function onKilled() {
-		//現在はあたり判定無効化して半透明にする処理を
-        this.layer.opacity = 128;
-        this.layer.hitThreshold = 256;
-		
-		//ダメージを与えられなくする
-		this.atack = function() { return false; };
-	}
-	
-    /**
-     * タイマーイベント
-     * @param	ev イベントパラメータ
-     */
-    function action(ev){
-        if(this.enable) this.move(vx, vy);
     }
 
     /**

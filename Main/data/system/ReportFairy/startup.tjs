@@ -18,7 +18,7 @@ Scripts.execStorage("system/ReportFairy/RFGLifebarManager.tjs");
 Scripts.execStorage("system/ReportFairy/RFGLayerCreator.tjs"); 
 Scripts.execStorage("system/ReportFairy/RFGScore.tjs"); 
 Scripts.execStorage("system/ReportFairy/RFGScoreManager.tjs"); 
-
+Scripts.execStorage("system/ReportFairy/RFGCollisionLayer.tjs"); 
 
 
 /*

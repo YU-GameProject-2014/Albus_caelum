@@ -4,6 +4,7 @@
  */
 class RFGReport extends RFGObject{
     var speed = 2;
+	var collisionLayer;
     
 	/**
 	 * 
@@ -14,6 +15,8 @@ class RFGReport extends RFGObject{
     function RFGReport(wnd, lay, owner){
         super.RFGObject(wnd, lay, owner);
         this.layer = RFGLayerCreator.createReportLayer(wnd, lay);
+		this.collisionLayer = RFGLayerCreator.createReportCollisionLayer(wnd, this.layer, void);
+		this.collisionLayer.visible = true;
         
         this.defaultPos();
         this.timer.interval = 10;

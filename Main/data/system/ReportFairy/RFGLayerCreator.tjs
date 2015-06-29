@@ -49,13 +49,35 @@ class RFGLayerCreator {
         f_lay.loadImages("image/Fairy.png");
         f_lay.setSizeToImageSize();
         
-        f_lay.collisionLayers.add(RFGLayerCreator.createCollisionLayer(wnd, f_lay, 0,  0, f_lay.width, 20 ));
-        f_lay.collisionLayers.add(RFGLayerCreator.createCollisionLayer(wnd, f_lay, 0, 30, f_lay.width, 100));
+        //f_lay.collisionLayers.add(RFGLayerCreator.createCollisionLayer(wnd, f_lay, 0,  0, f_lay.width, 20 ));
+        //f_lay.collisionLayers.add(RFGLayerCreator.createCollisionLayer(wnd, f_lay, 0, 30, f_lay.width, 100));
         
         
         return f_lay;
     }
 
+	/**
+	 * 妖精衝突判定レイヤー作成
+	 * @param	wnd   描画ウインドウオブジェクト
+	 * @param	lay   親レイヤー
+	 * @param	owner 管理者
+	 */
+    function createFairyCollisionLayer(wnd, lay, owner){
+        var fc_lay = new RFGCollisionLayer(wnd, lay, owner);
+		fc_lay.visible = false;
+        fc_lay.owner = owner;//メモリリークの危険性
+        fc_lay.width = lay.width;
+        fc_lay.height = lay.height;
+		
+		fc_lay.addArea(0,   0, fc_lay.width, 20);
+		fc_lay.addArea(0,  30, fc_lay.width, 100);
+		
+		fc_lay.enable = true;
+		
+        return fc_lay;
+    }
+	
+	
 	/**
 	 * 集中枠レイヤー作成
 	 * @param	wnd   描画ウインドウオブジェクト
@@ -96,12 +118,32 @@ class RFGLayerCreator {
         var r_lay = new RFGReportLayer(wnd, lay);
         r_lay.setPosCenter();
 
-        r_lay.collisionLayers.add(RFGLayerCreator.createCollisionLayer(wnd, r_lay, 0, 100, r_lay.width, 50));
+        //r_lay.collisionLayers.add(RFGLayerCreator.createCollisionLayer(wnd, r_lay, 0, 100, r_lay.width, 50));
 
         
         return r_lay;
     }
 
+	/**
+	 * レポート衝突判定レイヤー作成
+	 * @param	wnd   描画ウインドウオブジェクト
+	 * @param	lay   親レイヤー
+	 * @param	owner 管理者
+	 */
+    function createReportCollisionLayer(wnd, lay, owner){
+        var rc_lay = new RFGCollisionLayer(wnd, lay, void);
+		rc_lay.visible = false;
+        rc_lay.owner = void;//メモリリークの危険性
+        rc_lay.width = lay.width;
+        rc_lay.height = lay.height;
+		
+		rc_lay.addArea(0, 150, rc_lay.width, 50);
+		rc_lay.enable = true;
+		
+        return rc_lay;
+    }
+
+	
 	/**
 	 * レポートのライフバーレイヤー作成
 	 * @param	wnd   描画ウインドウオブジェクト
@@ -161,35 +203,4 @@ class RFGLayerCreator {
 
         return col_lay;
     }
-    
-	/**
-	 * 妖精の衝突判定レイヤー作成
-	 * @param	wnd   描画ウインドウオブジェクト
-	 * @param	lay   親レイヤー
-	 */
-    function createFairyAtariLayer(wnd, lay){
-        var a_lay = RFGLayerCreator.createCollisionLayer(wnd, lay, 0, 0, 50, 80);
-        a_lay.setPosCenter();
-        
-        return a_lay;
-    }
-
-	/**
-	 * レポートの衝突判定レイヤー作成
-	 * @param	wnd   描画ウインドウオブジェクト
-	 * @param	lay   親レイヤー
-	 */
-    function createReportAtariLayer(wnd, lay){
-        var a_lay = new RFGLayer(wnd, lay);
-        a_lay.width  = a_lay.parent.width  * 0.500;
-        a_lay.height = a_lay.parent.height * 0.333;
-        a_lay.fillRect(0, 0, a_lay.width, a_lay.height, 0x7F00FF00);
-        a_lay.setPosCenter();
-        a_lay.bringToFront();
-        a_lay.visible = true;
-        a_lay.hitThreshold = 256;
-        
-        return a_lay;
-    }
-
 }
