@@ -8,7 +8,6 @@ class RFGFairy extends RFGObject{
     var enable;   //生死
     var layer;      //RFGFairyLayer
 	var hp = 5;//とりあえず実装, 将来的にはHPオブジェクトに分離予定
-	var collisionLayer;
     
 	/**
 	 * コンストラクタ, レイヤー作成とタイマーの設定

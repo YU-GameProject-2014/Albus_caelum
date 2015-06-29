@@ -5,6 +5,7 @@
 class  RFGBasicObject
 {
 	var layer;
+	var collisionLayer;
 	
 	function RFGBasicObject(wnd, lay) {
 		
