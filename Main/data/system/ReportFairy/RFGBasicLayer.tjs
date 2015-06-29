@@ -1,5 +1,5 @@
 /**
- * 絶対座標を扱えるようにしたレイヤー
+ * Layerクラス機能拡張
  * @author gewalt01
  */
 class RFGBasicLayer extends Layer{
@@ -75,8 +75,27 @@ class RFGBasicLayer extends Layer{
         this.left = (this.parent.width  - this.width ) / 2; //両端揃え;
         this.top  = (this.parent.height - this.height) / 2; //中央揃え;
     }
+
 	/**
-	 * 自身を合成先として合成元レイヤで合成する
+	 * 自身を画像ファイルをパターンにして合成して塗りつぶす
+	 * @param	offx   xオフセット
+	 * @param	offy   yオフセット
+	 * @param   width  幅
+	 * @param   height 高さ
+	 * @param	imsrc    合成する画像ファイルのパス
+	 */
+	function operateFillImageRect(offx, offy, width, height, imsrc){
+		var img = new global.Layer(this.window, this.window.primaryLayer);
+		img.visible = false;
+		img.loadImages(imsrc);
+		img.setSizeToImageSize();
+		this.operateFillRect(offx, offy, width, height, img);
+		invalidate img;
+	}
+
+	
+	/**
+	 * 自身を合成先として合成元レイヤをパターンにして合成して塗りつぶす
 	 * @param	offx   xオフセット
 	 * @param	offy   yオフセット
 	 * @param   width  幅
