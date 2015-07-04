@@ -5,9 +5,9 @@
 
  class RFGLifebarManager extends RFGObjectManager{    
 
-	 function RFGLifebarManager(wnd, lay, owner) {
+	function RFGLifebarManager(wnd, lay, owner) {
 		super.RFGObjectManager(wnd, lay, owner);
-		this.addObject(new RFGLifebar(this.window, this.parentLayer, this));
+		this.addObject(RFGLifebarCreator.createMainLifebar(this.window, this.parentLayer, this));
 	}
     
 	function consult(obj) {

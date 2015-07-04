@@ -1,0 +1,37 @@
+/**
+ * 妖精レイヤファクトリ
+ * @author 
+ */
+class  RFGFairyLayerCreator
+{
+	/**
+	 * 妖精レイヤー作成
+	 * @param	wnd   描画ウインドウオブジェクト
+	 * @param	lay   親レイヤー
+	 * @param	owner 管理者
+	 */
+	function createFactLayer(wnd, lay, owner){
+        var f_lay = new RFGLayer(wnd, lay);
+        f_lay.owner = owner;//メモリリークの危険性
+        f_lay.loadImages("image/Fairy.png");
+        f_lay.setSizeToImageSize();
+        
+        return f_lay;
+    }
+
+	/**
+	 * 妖精レイヤー作成
+	 * @param	wnd   描画ウインドウオブジェクト
+	 * @param	lay   親レイヤー
+	 * @param	owner 管理者
+	 */
+	function createDarmLayer(wnd, lay, owner){
+        var f_lay = new RFGLayer(wnd, lay);
+        f_lay.owner = owner;//メモリリークの危険性
+        f_lay.loadImages("image/darm.png");
+        f_lay.setSizeToImageSize();
+        
+        return f_lay;
+    }
+	
+}

@@ -3,11 +3,11 @@
  */
 class RFGLifebar extends RFGObject{
    
-    var _life;
-    var _maxlife;
+    var _life    = 1;
+    var _maxlife = 2;
     
     property life
-    {
+	{
     	setter(val){
 	        this._life = val;
 			this.update();
@@ -34,20 +34,20 @@ class RFGLifebar extends RFGObject{
     
     function RFGLifebar(wnd, lay, owner) {
 		super.RFGObject(wnd, lay, owner);
-        this.layer = RFGLayerCreator.createLifebarLayer(wnd, lay);
-        this.update();
+        this.layer = RFGLifebarLayerCreator.createLifebarLayer(wnd, lay);
     } 
     
 	/**
 	 * 再描画
 	 */
-    function update(){
+    function update() {
+		this.layer.colorRect(0, 0, this.layer.width, this.layer.height, 0, -255);
         this.layer.fillRect(0, 0, this.layer.width, this.layer.height, 0xFFFF0000);
         this.layer.fillRect(0, 0, this.layer.width / this.maxlife * this.life, this.layer.height, 0xFFFFFF00);
     }
 	
 	/**
-	 * ライフがなくなった時の処理
+	 * ライフがなくなった時のイベント
 	 */
 	function onNoLife() {
 		this.owner.onNoLife();

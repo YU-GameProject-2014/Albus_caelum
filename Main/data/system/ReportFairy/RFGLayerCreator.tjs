@@ -46,7 +46,7 @@ class RFGLayerCreator {
     function createFairyLayer(wnd, lay, owner){
         var f_lay = new RFGLayer(wnd, lay);
         f_lay.owner = owner;//メモリリークの危険性
-        f_lay.loadImages("image/Fairy.png");
+        f_lay.loadImages("image/darm.png");
         f_lay.setSizeToImageSize();
         
         //f_lay.collisionLayers.add(RFGLayerCreator.createCollisionLayer(wnd, f_lay, 0,  0, f_lay.width, 20 ));
@@ -141,24 +141,6 @@ class RFGLayerCreator {
 		rc_lay.enable = true;
 		
         return rc_lay;
-    }
-
-	
-	/**
-	 * レポートのライフバーレイヤー作成
-	 * @param	wnd   描画ウインドウオブジェクト
-	 * @param	lay   親レイヤー
-	 */
-    function createLifebarLayer(wnd, lay){
-        var l_lay = new RFGLayer(wnd, lay);
-        l_lay.width = 400;
-        l_lay.height = 20;
-        l_lay.setPosCenter();
-        l_lay.top = l_lay.parent.height - 2 * l_lay.height;
-        l_lay.hitThreshold = 256;
-        l_lay.visible = true;
-        
-        return l_lay;
     }
 
 	/**

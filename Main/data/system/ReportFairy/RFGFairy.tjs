@@ -6,8 +6,8 @@ class RFGFairy extends RFGObject{
     var x, y;     //座標
     var vx, vy;   //速度ベクトル
     var enable;   //生死
-    var layer;      //RFGFairyLayer
-	var hp = 5;//とりあえず実装, 将来的にはHPオブジェクトに分離予定
+	var fairyLifebar; //RFGLifebar
+	var hp = 5;//デフォルト値5
     
 	/**
 	 * コンストラクタ, レイヤー作成とタイマーの設定
@@ -17,10 +17,14 @@ class RFGFairy extends RFGObject{
 	 */
     function RFGFairy(wnd, lay, owner) {
 		super.RFGObject(wnd, lay, owner);
-        //this.layer.parentがNULLになる可能性あり
-        this.layer = RFGLayerCreator.createFairyLayer(wnd, lay, this);
-		this.collisionLayer = RFGLayerCreator.createFairyCollisionLayer(wnd, this.layer, this);
-		this.collisionLayer.visible = true;
+		/*
+		 * これらはデフォルト設定です
+		 */
+		
+		//this.setImageLayer(RFGFairyLayerCreator.createFactLayer(wnd, this.layer, this));
+		//this.setCollisionLayer(RFGLayerCreator.createFairyCollisionLayer(wnd, this.layer, this));
+		//this.setLifebar(this.hp);
+		
         this.setVect(0, 0);
         this.enable=0;
         this.timer.interval = 1000/60;
@@ -32,6 +36,8 @@ class RFGFairy extends RFGObject{
 	 */
     function onMouseEnter() {
 		this.hp--;//とりあえず実装, 将来的にはHPオブジェクトに分離予定
+		this.fairyLifebar.life = this.hp;
+
 		if(this.hp <= 0) this.onKilled();
     }
     
@@ -46,6 +52,10 @@ class RFGFairy extends RFGObject{
         this.layer.setPos(this.x, this.y);
     }
 
+	function onNoLife() {
+		
+	}
+	
 	/**
 	 * 妖精が死んでしまった時の処理
 	 */
@@ -118,6 +128,33 @@ class RFGFairy extends RFGObject{
 	
 	function atack(obj) {
 	    return true;	
+	}
+
+	/**
+	 * 衝突判定レイヤー設定
+	 * @param	layer 衝突判定レイヤー
+	 */
+	function setCollisionLayer(layer) {
+		this.collisionLayer = layer;
+		this.collisionLayer.visible = true;
+	}
+	
+	/**
+	 * 妖精の画像設定
+	 * @param	layer 画像レイヤ
+	 */
+	function setImageLayer(layer) {
+        this.imageLayer = layer;
+		this.imageLayer.visible = true;
+		
+		this.layer.width = this.imageLayer.width;
+		this.layer.height = this.imageLayer.height;
+	}
+
+	function setLifebar(hp) {
+		this.hp = hp;
+		this.fairyLifebar = RFGLifebarCreator.createFairyLifebar(wnd, this.layer, this);
+		this.fairyLifebar.maxlife = this.fairyLifebar.life = this.hp;
 	}
 
 	/**

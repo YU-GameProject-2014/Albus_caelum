@@ -1,0 +1,24 @@
+/**
+ * ...
+ * @author 
+ */
+class RFGLifebarCreator 
+{
+	function createMainLifebar(wnd, lay, owner)
+	{
+		var lifebar = new RFGLifebar(wnd, lay, owner);
+		lifebar.layer = RFGLifebarLayerCreator.createLifebarLayer(wnd, lay);
+		lifebar.update();
+		
+		return lifebar;
+	}
+
+	function createFairyLifebar(wnd, lay, owner)
+	{
+		var lifebar = new RFGLifebar(wnd, lay, owner);
+		lifebar.layer = RFGLifebarLayerCreator.createFairyLifebarLayer(wnd, lay);
+		lifebar.update();
+		
+		return lifebar;
+	}
+}

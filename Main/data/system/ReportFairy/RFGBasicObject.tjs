@@ -5,7 +5,9 @@
 class  RFGBasicObject
 {
 	var layer;
+	var imageLayer;
 	var collisionLayer;
+	
 	
 	function RFGBasicObject(wnd, lay) {
 		

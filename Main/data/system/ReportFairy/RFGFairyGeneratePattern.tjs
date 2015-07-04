@@ -9,6 +9,7 @@ class RFGFairyGeneratePattern {
 	var rand;
 	var timer;
 	var counts = [];
+	var latestPattern;
 	
 	/**
 	 * コンストラクタ
@@ -19,11 +20,85 @@ class RFGFairyGeneratePattern {
         this.rand = new Math.RandomGenerator();
 		this.timer = new Timer(this);
 		this.timer.enabled = true;
-		this.counts = [1000, 0, 1000, 0, 0, 1000, 0, 0, 0, 1000, 0, 0, 0, 0, 1000, 0, 0, 0, 0, 0, 1000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ];
-		this.timer.interval = this.counts.shift();
-		this.action();
+		this.counts = [];
+		this.counts.add([0, "fact"]);
+		this.counts.add([0, "fact"]);
+		this.counts.add([0, "fact"]);
+		this.counts.add([0, "fact"]);
+		this.counts.add([0, "fact"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([5000, "fact"]);
+		this.counts.add([0, "fact"]);
+		this.counts.add([0, "fact"]);
+		this.counts.add([0, "fact"]);
+		this.counts.add([0, "fact"]);
+		this.counts.add([0, "fact"]);
+		this.counts.add([0, "fact"]);
+		this.counts.add([0, "fact"]);
+		this.counts.add([0, "fact"]);
+		this.counts.add([0, "fact"]);
+		this.counts.add([5000, "darm"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([5000, "fact"]);
+		this.counts.add([0, "fact"]);
+		this.counts.add([0, "fact"]);
+		this.counts.add([0, "fact"]);
+		this.counts.add([0, "fact"]);
+		this.counts.add([0, "fact"]);
+		this.counts.add([0, "fact"]);
+		this.counts.add([0, "fact"]);
+		this.counts.add([0, "fact"]);
+		this.counts.add([0, "fact"]);
+		this.counts.add([0, "fact"]);
+		this.counts.add([0, "fact"]);
+		this.counts.add([0, "fact"]);
+		this.counts.add([0, "fact"]);
+		this.counts.add([0, "fact"]);
+		this.counts.add([0, "fact"]);
+		this.counts.add([0, "fact"]);
+		this.counts.add([0, "fact"]);
+		this.counts.add([0, "fact"]);
+		this.counts.add([0, "fact"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([0, "darm"]);
+		this.counts.add([100000000, "fact"]);
+
+		
+		this.latestPattern = this.counts.shift();
+		this.timer.interval = this.latestPattern[0];
 		this.width = this.manager.parentLayer.width;
 		this.height = this.manager.parentLayer.height;
+		this.action();
 	}
 
     /**
@@ -35,7 +110,7 @@ class RFGFairyGeneratePattern {
 		
 		
 		this.popPosition();
-		var obj = new RFGFairy(this.manager.window, this.manager.parentLayer, this.manager);
+		var obj = RFGFairyCreator.createFairy(this.manager.window, this.manager.parentLayer, this.manager, this.latestPattern[1]);
 		obj.layer.setPos(x, y);//レイヤーの座標だけかえてもFairyオブジェクトの座標は変わらない
 		obj.x = this.x;//妖精の座標変更
 		obj.y = this.y;//妖精の座標変更
@@ -49,7 +124,8 @@ class RFGFairyGeneratePattern {
 			return;
 		}
 		
-		this.timer.interval = this.counts.shift();
+		this.latestPattern = this.counts.shift();
+		this.timer.interval = this.latestPattern[0];
 		
 			
 		if (this.timer.interval <= 0) this.action(ev);

@@ -1,0 +1,31 @@
+/**
+ * 妖精作成ファクトリ
+ * @author 
+ */
+class  RFGFairyCreator
+{
+	function createFairy(wnd, lay, owner, name) {
+		if (name === "darm") return RFGFairyCreator.createDarm(wnd, lay, owner);
+		if (name === "fact") return RFGFairyCreator.createFact(wnd, lay, owner);
+		
+		return RFGFairyCreator.createDarm(wnd, lay, owner);
+	}
+	
+	function createDarm(wnd, lay, owner) {
+		var obj = new RFGFairy(wnd, lay, owner);
+		obj.setImageLayer(RFGFairyLayerCreator.createDarmLayer(wnd, obj.layer, obj));
+		obj.setCollisionLayer(RFGLayerCreator.createFairyCollisionLayer(wnd, obj.layer, obj));
+		obj.setLifebar(1);
+
+		return obj;
+	}
+
+	function createFact(wnd, lay, owner) {
+		var obj = new RFGFairy(wnd, lay, owner);
+		obj.setImageLayer(RFGFairyLayerCreator.createFactLayer(wnd, obj.layer, obj));
+		obj.setCollisionLayer(RFGLayerCreator.createFairyCollisionLayer(wnd, obj.layer, obj));
+		obj.setLifebar(3);
+		
+		return obj;
+	}
+}

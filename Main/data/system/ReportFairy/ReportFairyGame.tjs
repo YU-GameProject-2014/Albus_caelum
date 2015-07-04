@@ -163,6 +163,7 @@ class ReportFairyGame {
 	function onFinishReport() {
 		this.stopAllObjects();
 		System.inform("complite");
+		this.exit();
 	}
 
 	/**
@@ -171,6 +172,7 @@ class ReportFairyGame {
 	function onNoLife() {
 		this.stopAllObjects();
 		System.inform("failed");
+		this.exit();
 	}
 
 	
