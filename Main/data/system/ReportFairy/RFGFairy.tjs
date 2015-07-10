@@ -8,6 +8,9 @@ class RFGFairy extends RFGObject{
     var enable;   //生死
 	var fairyLifebar; //RFGLifebar
 	var hp = 5;//デフォルト値5
+	var actionPattern; //RFGFairyActionPattern
+	var sound;
+
     
 	/**
 	 * コンストラクタ, レイヤー作成とタイマーの設定
@@ -24,8 +27,10 @@ class RFGFairy extends RFGObject{
 		//this.setImageLayer(RFGFairyLayerCreator.createFactLayer(wnd, this.layer, this));
 		//this.setCollisionLayer(RFGLayerCreator.createFairyCollisionLayer(wnd, this.layer, this));
 		//this.setLifebar(this.hp);
+		this.actionPattern = new RFGFairyActionPattern(this);
 		
         this.setVect(0, 0);
+		//this.sound = new WaveSoundBuffer(null);
         this.enable=0;
         this.timer.interval = 1000/60;
         this.timer.enabled = true;
@@ -38,7 +43,12 @@ class RFGFairy extends RFGObject{
 		this.hp--;//とりあえず実装, 将来的にはHPオブジェクトに分離予定
 		this.fairyLifebar.life = this.hp;
 
-		if(this.hp <= 0) this.onKilled();
+		if (this.hp <= 0) {
+			this.onKilled();
+		} else {
+			//this.sound.open("sound/004.wav");
+			//this.sound.play();
+		}
     }
     
 	/**
@@ -69,6 +79,8 @@ class RFGFairy extends RFGObject{
 		
 		//衝突判定無効化
 		this.collisionLayer.enable = false;
+		
+		this.actionPattern.onKilled();
 	}
 	
     /**
@@ -78,22 +90,7 @@ class RFGFairy extends RFGObject{
     function action(ev){
         if (this.enable === false) return;
 
-		this.move(vx, vy);
-
-        //画面からはみ出たら消滅
-        if (this.layer.left + this.layer.width < 0 || this.layer.top  + this.layer.height < 0 ||
-            this.layer.parent.width  < this.layer.left|| this.layer.parent.height < this.layer.top
-        ){
-            this.suicide();
-			return;
-        }
-        
-		//移動後の処理を親に相談
-        if (this.advice()) {
-            this.suicide();
-			return;
-        }
-
+		this.actionPattern.action();
     }
 
     /**
@@ -163,5 +160,6 @@ class RFGFairy extends RFGObject{
     function finalize(){
         super.finalize();
         invalidate this.layer;
+		invalidate this.actionPattern;
     }
 }

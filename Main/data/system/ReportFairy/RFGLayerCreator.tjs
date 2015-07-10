@@ -100,10 +100,10 @@ class RFGLayerCreator {
 	 * @param	wnd   描画ウインドウオブジェクト
 	 * @param	lay   親レイヤー
 	 */
-
     function createBlankFrameLayer(wnd, lay){
         var blank_lay = RFGLayerCreator.createFrameLayer(wnd, lay);
 		blank_lay.colorRect(0, 0, blank_lay.width, blank_lay.height, 0x000000, -255);
+        blank_lay.hitThreshold = 255;
 		
         return blank_lay;
     }
@@ -184,5 +184,21 @@ class RFGLayerCreator {
         col_lay.hitThreshold = 256;
 
         return col_lay;
+    }
+
+	/**
+	 * 落書きレイヤー
+	 * @param	wnd        描画ウインドウオブジェクト
+	 * @param	lay        親レイヤー
+	 * @param	report_obj レポートオブジェクト   
+	 */
+    function createDoodLayer(wnd, lay, report_obj) {
+		var d_lay = new RFGLayer(wnd, lay);
+		d_lay.width = report_obj.layer.width;
+		d_lay.height = report_obj.layer.height;
+        d_lay.visible = true;
+		d_lay.setPosCenter();
+		
+        return d_lay;
     }
 }

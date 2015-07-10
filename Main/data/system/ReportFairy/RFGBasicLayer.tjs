@@ -84,10 +84,10 @@ class RFGBasicLayer extends Layer{
 	 * @param   height 高さ
 	 * @param	imsrc    合成する画像ファイルのパス
 	 */
-	function operateFillImageRect(offx, offy, width, height, imsrc){
+	function operateFillImageRect(offx, offy, width, height, src){
 		var img = new global.Layer(this.window, this.window.primaryLayer);
 		img.visible = false;
-		img.loadImages(imsrc);
+		img.loadImages(src);
 		img.setSizeToImageSize();
 		this.operateFillRect(offx, offy, width, height, img);
 		invalidate img;
@@ -107,10 +107,11 @@ class RFGBasicLayer extends Layer{
 		{
 			for(var j=offy; j<height + offy; j+=src.height)
 			{
-				lay.operateRect(i, j, src, 0, 0, Math.min(src.width, width - i), Math.min(src.height, height - j), omAuto, 255);
+				this.operateRect(i, j, src, 0, 0, Math.min(src.width, width - i), Math.min(src.height, height - j), omAuto, 255);
 			}
 		}
 	}
+
 	
 	/**
 	 * finalize

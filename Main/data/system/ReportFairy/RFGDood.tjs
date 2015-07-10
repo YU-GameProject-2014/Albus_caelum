@@ -1,0 +1,30 @@
+/**
+ * 
+ * @author gewalt01
+ */
+class RFGDood extends RFGObject{
+	
+	/**
+	 * コンストラクタ
+	 * @param	wnd   描画ウインドウオブジェクト
+	 * @param	lay   親レイヤー
+	 * @param	owner 管理者
+	 */
+    function RFGDood(wnd, lay, owner, report_obj) {
+		super.RFGObject(wnd, lay, owner);
+        this.layer = RFGLayerCreator.createDoodLayer(wnd, lay, report_obj);
+   } 
+	
+	function draw() {
+		this.layer.operateFillImageRect(0, 0, 999, 999, "image/dood001.png");
+	}
+	
+	function clear() {
+		this.layer.colorRect(0, 0, this.layer.width, this.layer.height, 0, -255);
+	}
+
+    function finalize(){
+        super.finalize();
+        invalidate this.layer;
+    }
+}

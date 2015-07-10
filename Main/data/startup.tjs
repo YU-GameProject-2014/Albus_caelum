@@ -25,6 +25,7 @@ Scripts.execStorage("system/ReportFairy/RFGFairyManager.tjs");
 Scripts.execStorage("system/ReportFairy/RFGFairyGeneratePattern.tjs"); 
 Scripts.execStorage("system/ReportFairy/RFGFairyCreator.tjs"); 
 Scripts.execStorage("system/ReportFairy/RFGFairyLayerCreator.tjs"); 
+Scripts.execStorage("system/ReportFairy/RFGFairyActionPattern.tjs"); 
 Scripts.execStorage("system/ReportFairy/RFGReport.tjs"); 
 Scripts.execStorage("system/ReportFairy/RFGReportLayer.tjs"); 
 Scripts.execStorage("system/ReportFairy/RFGReportManager.tjs"); 
@@ -35,6 +36,8 @@ Scripts.execStorage("system/ReportFairy/RFGLifebarManager.tjs");
 Scripts.execStorage("system/ReportFairy/RFGLayerCreator.tjs"); 
 Scripts.execStorage("system/ReportFairy/RFGScore.tjs"); 
 Scripts.execStorage("system/ReportFairy/RFGScoreManager.tjs"); 
+Scripts.execStorage("system/ReportFairy/RFGDood.tjs"); 
+Scripts.execStorage("system/ReportFairy/RFGDoodManager.tjs"); 
 Scripts.execStorage("system/ReportFairy/RFGCollisionLayer.tjs"); 
 
 

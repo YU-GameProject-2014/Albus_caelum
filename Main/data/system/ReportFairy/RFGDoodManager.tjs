@@ -1,0 +1,17 @@
+/**
+ * ...
+ * @author 
+ */
+
+ class RFGDoodManager extends RFGObjectManager{    
+
+	function RFGDoodManager(wnd, lay, owner, report_obj) {
+		super.RFGObjectManager(wnd, lay, owner);
+		this.addObject(new RFGDood(this.window, this.parentLayer, this, report_obj));
+	}
+    
+    function finalize() {
+		super.finalize();
+    }
+}
+

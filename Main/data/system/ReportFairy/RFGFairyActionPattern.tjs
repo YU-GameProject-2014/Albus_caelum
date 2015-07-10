@@ -1,0 +1,67 @@
+/**
+ * 妖精行動パターン
+ * @author 
+ */
+class  RFGFairyActionPattern
+{
+	var owner;
+	var action;//クロージャ
+	var timer;//点滅処理用
+	
+	function RFGFairyActionPattern(owner){
+		this.owner = owner;
+		this.action = actionMove;
+		this.timer = new Timer(this, "timerEvent");
+		this.timer.interval = 100;//点滅間隔
+	}
+	
+	function actionMove(ev) {
+        this.owner.x += this.owner.vx;
+        this.owner.y += this.owner.vy;
+        this.owner.layer.setPos(this.owner.x, this.owner.y);
+
+        //画面からはみ出たら消滅
+        if (this.owner.layer.left + this.owner.layer.width < 0 || this.owner.layer.top  + this.owner.layer.height < 0 ||
+            this.owner.layer.parent.width  < this.owner.layer.left|| this.owner.layer.parent.height < this.owner.layer.top
+        ){
+            this.owner.suicide();
+			return;
+        }
+        
+		//移動後の処理を親に相談(衝突判定の相談)
+        if (this.owner.advice()) {
+            this.action = this.actionWait;
+			this.timer.enabled = true;
+			return;
+        }
+	}
+	
+	function actionWait(ev) {
+		this.owner.timer.interval = 1000;
+		this.action = this.actionSuicide;
+	}
+	
+	function actionSuicide(ev) {
+		this.owner.timer.enabled = false;
+		this.owner.suicide();
+	}
+	
+	/**
+	 * 点滅
+	 * @param	ev
+	 */
+	function timerEvent(ev) {
+		this.owner.layer.visible = !this.owner.layer.visible;
+	}
+	
+	function onKilled() {
+        this.action = this.actionWait;
+		this.timer.enabled = true;
+		//this.owner.sound.open("sound/002.wav");
+		//this.owner.sound.play();
+	}
+	
+	function finalize {
+		invalidate this.timer;
+	}
+}

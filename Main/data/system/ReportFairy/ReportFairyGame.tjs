@@ -6,6 +6,7 @@ class ReportFairyGame {
 	//Layer
     var mainLayer;
     var reportUnit;
+	var doodUnit;
     var fairyUnit;
     var frameUnit;
     var lifebarUnit;
@@ -13,6 +14,7 @@ class ReportFairyGame {
     
     //RFGObjectManager
 	var reportManager;
+	var doodManager;
     var fairyManager;
 	var frameManager;
 	var lifebarManager;
@@ -21,11 +23,14 @@ class ReportFairyGame {
 	//array
 	var managers = [];
 	var onKeyDownEvents = %[];
-	var onKeyUpEvents = %[];
+	var onKeyUpEvents = % [];
 	
-	var fairies; //array//未使用;
-    var maxFairyNum;//未使用
- 
+	//bgm
+	var bgm;
+	
+	//被ダメ時効果音
+	var sound;
+
 	//集中モード
     var crazy = false;
  
@@ -39,12 +44,14 @@ class ReportFairyGame {
         
 		this.reportUnit = RFGLayerCreator.createUnitLayer(wnd, this.mainLayer);
         this.fairyUnit = RFGLayerCreator.createUnitLayer(wnd, this.mainLayer);
+        this.doodUnit = RFGLayerCreator.createUnitLayer(wnd, this.mainLayer);
 		this.frameUnit = RFGLayerCreator.createUnitLayer(wnd, this.mainLayer);
 		this.lifebarUnit = RFGLayerCreator.createUnitLayer(wnd, this.mainLayer);
 		this.scoreUnit = RFGLayerCreator.createUnitLayer(wnd, this.mainLayer);
         
         this.reportUnit.bringToFront();
 		this.fairyUnit.bringToFront();
+		this.doodUnit.bringToFront();
         this.frameUnit.bringToFront();
         this.lifebarUnit.bringToFront();
         this.scoreUnit.bringToFront();
@@ -54,12 +61,10 @@ class ReportFairyGame {
         this.managers.add(this.lifebarManager = new RFGLifebarManager(wnd, this.frameUnit, this));
         this.managers.add(this.reportManager = new RFGReportManager(wnd, this.reportUnit, this));
 		this.managers.add(this.scoreManager = new RFGScoreManager(wnd, this.scoreUnit, this));
-
-		
+        this.managers.add(this.doodManager = new RFGDoodManager(wnd, this.doodUnit, this, this.reportManager.objects[0]));
 		
         this.lifebarManager.objects[0].maxlife = this.lifebarManager.objects[0].life = 10;//初期ライフ
         this.scoreManager.objects[0].score = this.reportManager.objects[0].num = 2;//枚数
-
 	
 		//キー入力ハンドラ登録
 		this.onKeyDownEvents[VK_X] = function(key) { this.stopAllObjects(); } incontextof this;
@@ -67,6 +72,12 @@ class ReportFairyGame {
 		this.onKeyUpEvents[VK_ESCAPE] = function(key) { this.exit(); } incontextof this;
 		this.onKeyUpEvents[VK_X] = function(key) { this.startAllObjects(); } incontextof this;
 		this.onKeyUpEvents[VK_C] = function(key) { this.fairyManager.killAll(); } incontextof this;
+		
+		//音声読み込み
+		//this.sound = new WaveSoundBuffer(null);
+		//this.bgm = new WaveSoundBuffer(null);
+		//this.bgm.open("bgm/bgm001.WAV");
+		//this.bgm.play();
     }
     
     /**
@@ -124,6 +135,12 @@ class ReportFairyGame {
                 this.lifebarManager.objects[0].update();
 				
 				obj.collisionLayer.enable = false;
+				
+				//this.sound.open("sound/001.wav");
+				//this.sound.play();
+				
+				//落書き
+				this.doodManager.objects[0].draw();
 
                 return true;
             }
@@ -155,6 +172,7 @@ class ReportFairyGame {
 	 */
     function writedReport() {
         this.scoreManager.objects[0].score = --this.reportManager.objects[0].num;
+		this.doodManager.objects[0].clear();
     }
 	
 	/**
@@ -162,7 +180,11 @@ class ReportFairyGame {
 	 */
 	function onFinishReport() {
 		this.stopAllObjects();
+		//this.bgm.stop();
+		//this.sound.open("sound/005.wav");
+		//this.sound.play();
 		System.inform("complite");
+
 		this.exit();
 	}
 
@@ -171,6 +193,9 @@ class ReportFairyGame {
 	 */
 	function onNoLife() {
 		this.stopAllObjects();
+		//this.bgm.stop();
+		//this.sound.open("sound/003.wav");
+		//this.sound.play();
 		System.inform("failed");
 		this.exit();
 	}
@@ -200,6 +225,7 @@ class ReportFairyGame {
 		invalidate this.reportManager;
 		invalidate this.scoreManager;
         invalidate this.reportUnit;
+        invalidate this.doodUnit;
         invalidate this.fairyUnit;
         invalidate this.frameUnit;
         invalidate this.lifebarUnit;

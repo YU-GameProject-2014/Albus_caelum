@@ -12,7 +12,7 @@ class RFGLayer extends RFGBasicLayer
 	 * @param	lay 親レイヤー
 	 */
     function RFGLayer(wnd, lay){
-        super.Layer(wnd, lay);
+        super.RFGBasicLayer(wnd, lay);
     }
 	
 
