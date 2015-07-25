@@ -150,7 +150,7 @@ class RFGFairy extends RFGObject{
 
 	function setLifebar(hp) {
 		this.hp = hp;
-		this.fairyLifebar = RFGLifebarCreator.createFairyLifebar(wnd, this.layer, this);
+		this.fairyLifebar = RFGLifebarCreator.createFairyLifebar(this.window, this.layer, this);
 		this.fairyLifebar.maxlife = this.fairyLifebar.life = this.hp;
 	}
 

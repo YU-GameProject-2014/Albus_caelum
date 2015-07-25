@@ -19,6 +19,8 @@ class  RFGObject extends RFGBasicObject
         this.timer = new Timer(this, "action");//メモリリークの危険性
         this.timer.enabled = false;
 		
+		this.window = wnd;
+		
         this.layer = new RFGLayer(wnd, lay);
 		this.layer.width = lay.width;
 		this.layer.height = lay.height;

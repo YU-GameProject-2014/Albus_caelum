@@ -5,6 +5,7 @@
 class  RFGBasicObject
 {
 	var layer;
+	var window;
 	var imageLayer;
 	var collisionLayer;
 	
