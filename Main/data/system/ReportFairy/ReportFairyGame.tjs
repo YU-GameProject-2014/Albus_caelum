@@ -43,15 +43,15 @@ class ReportFairyGame {
         this.mainLayer  = RFGLayerCreator.createMainLayer(wnd, lay, this);
         
 		this.reportUnit = RFGLayerCreator.createUnitLayer(wnd, this.mainLayer);
-        this.fairyUnit = RFGLayerCreator.createUnitLayer(wnd, this.mainLayer);
         this.doodUnit = RFGLayerCreator.createUnitLayer(wnd, this.mainLayer);
+        this.fairyUnit = RFGLayerCreator.createUnitLayer(wnd, this.mainLayer);
 		this.frameUnit = RFGLayerCreator.createUnitLayer(wnd, this.mainLayer);
 		this.lifebarUnit = RFGLayerCreator.createUnitLayer(wnd, this.mainLayer);
 		this.scoreUnit = RFGLayerCreator.createUnitLayer(wnd, this.mainLayer);
         
         this.reportUnit.bringToFront();
-		this.fairyUnit.bringToFront();
 		this.doodUnit.bringToFront();
+		this.fairyUnit.bringToFront();
         this.frameUnit.bringToFront();
         this.lifebarUnit.bringToFront();
         this.scoreUnit.bringToFront();
