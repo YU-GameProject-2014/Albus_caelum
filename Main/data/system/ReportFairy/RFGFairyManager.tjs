@@ -29,6 +29,24 @@ class RFGFairyManager extends RFGObjectManager{
 		//相談を上位オブジェクトにたらいまわし
 		return this.owner.consult(obj);
 	}
+
+	    /**
+     * 全物体動作可能にする
+     */
+    function startAll(){
+		super.startAll();
+		this.pattern.timer.enabled = true;
+    }
+    
+    /**
+     * 全物体停止
+     */
+    function stopAll() {
+		super.stopAll();
+		this.pattern.timer.enabled = false;
+    }
+
+	
     
     function finalize() {
 		super.finalize();
