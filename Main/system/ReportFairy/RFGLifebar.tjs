@@ -1,0 +1,16 @@
+class RFGLifebar{
+    var lay;
+    
+    var life = 10;
+    var maxlife = 10;
+    
+    function RFGLifebar(wnd, lay){
+        this.lay = RFGLayerCreator.createLifebarLayer(wnd, lay);
+        this.update();
+    } 
+    
+    function update(){
+        this.lay.fillRect(0, 0, this.lay.width, this.lay.height, 0xFFFF0000);
+        this.lay.fillRect(0, 0, this.lay.width / this.maxlife * this.life, this.lay.height, 0xFFFFFF00);
+    }
+}

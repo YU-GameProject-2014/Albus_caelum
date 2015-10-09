@@ -1,0 +1,87 @@
+/*
+ * 絶対座標を扱えるようにしたレイヤー
+ */
+
+class RFGBasicLayer extends Layer{
+    var owner;//管理者
+    var collisionLayers = new Array();//衝突判定レイヤー配列
+    
+    function RFGBasicLayer(wnd, lay){
+        super.Layer(wnd, lay);
+    }
+    
+    function onClick(x, y){
+        /* 実際の処理はownerオブジェクトに委譲 */
+        if (this.owner === void) return;
+        if (typeof this.owner.onClick === 'undefined') return;
+        this.owner.onClick(x, y);
+    }
+
+    /* キー操作はownerオブジェクトに委譲 */
+    function onKeyDown(key, shift, process=true){
+        if (this.owner === void) return;
+        if (typeof this.owner.onKeyDown === 'undefined') return;
+        this.owner.onKeyDown(key, shift, process);
+    }
+
+    /* キー操作はownerオブジェクトに委譲 */
+    function onKeyUp(key, shift, process=true){
+        if (this.owner === void) return;
+        if (typeof this.owner.onKeyUp === 'undefined') return;
+        this.owner.onKeyUp(key, shift, process);
+    }    
+        
+    property boundingLeft
+    {
+        getter()
+        {
+            return this.boundingParentLeft + this.left;
+        }
+    }
+
+    property boundingTop
+    {
+        getter()
+        {
+            return this.boundingParentTop + this.top;
+        }
+    }
+
+    property boundingParentLeft
+    {
+        getter()
+        {
+            var tmplay  = this.parent;
+            var tmpleft = 0;
+            while(tmplay != null)
+            {
+                tmpleft += tmplay.left;
+                tmplay = tmplay.parent;
+            }
+
+            return tmpleft;
+        }
+    }
+
+    property boundingParentTop
+    {
+        getter()
+        {
+            var tmplay  = this.parent;
+            var tmptop  = 0;
+            while(tmplay != null)
+            {
+                tmptop += tmplay.top;
+                tmplay = tmplay.parent;
+            }
+            
+            return tmptop;
+        }
+    }
+
+    
+    function setPosCenter(){
+        this.left = (this.parent.width  - this.width ) / 2; //両端揃え;
+        this.top  = (this.parent.height - this.height) / 2; //中央揃え;
+    }
+}

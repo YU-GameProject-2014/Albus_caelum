@@ -1,0 +1,122 @@
+class RFGLayerCreator{
+    function createMainLayer(wnd, lay, owner){
+        var m_lay = new RFGBasicLayer(wnd, lay);
+        m_lay.owner = owner;
+        m_lay.width = lay.width;
+        m_lay.height = lay.height;
+        m_lay.focusable = true;
+        m_lay.fillRect(0, 0, m_lay.width, m_lay.height, 0xFF7F7F7F);
+        m_lay.visible=true;
+        m_lay.focus();
+        
+        return m_lay;
+    }
+
+    function createFairyUnitLayer(wnd, lay){
+        var f_unit_lay;
+        f_unit_lay = new RFGBasicLayer(wnd, lay);
+        f_unit_lay.width = lay.width;
+        f_unit_lay.height = lay.height;
+        f_unit_lay.visible = true;
+
+        return f_unit_lay;
+    }
+
+    function createFairyLayer(wnd, lay, owner){
+        var f_lay = new RFGBasicLayer(wnd, lay);
+        f_lay.owner = owner;//ÉÅÉÇÉäÉäÅ[ÉNÇÃäÎåØê´
+        f_lay.loadImages("image/Fairy.png");
+        f_lay.setSizeToImageSize();
+        
+        f_lay.collisionLayers.add(RFGLayerCreator.createCollisionLayer(wnd, f_lay, 0,  0, f_lay.width, 20 ));
+        f_lay.collisionLayers.add(RFGLayerCreator.createCollisionLayer(wnd, f_lay, 0, 30, f_lay.width, 100));
+        
+        
+        return f_lay;
+    }
+
+    function createFrameLayer(wnd, lay){
+        var f_lay = new RFGBasicLayer(wnd, lay);
+        f_lay.width=wnd.innerWidth;
+        f_lay.height=wnd.innerHeight;
+        f_lay.loadImages("image/frame.png");
+        f_lay.setSizeToImageSize();
+        f_lay.hitThreshold = 0;
+        f_lay.visible=false;
+        
+        return f_lay;
+    }
+    
+    function createReportLayer(wnd, lay){
+        var r_lay = new RFGReportLayer(wnd, lay);
+        r_lay.setPosCenter();
+
+        r_lay.collisionLayers.add(RFGLayerCreator.createCollisionLayer(wnd, r_lay, 0, 100, r_lay.width, 50));
+
+        
+        return r_lay;
+    }
+
+
+    function createLifebarLayer(wnd, lay){
+        var l_lay = new RFGBasicLayer(wnd, lay);
+        l_lay.width = 400;
+        l_lay.height = 20;
+        l_lay.setPosCenter();
+        l_lay.top = l_lay.parent.height - 2 * l_lay.height;
+        l_lay.hitThreshold = 256;
+        l_lay.visible = true;
+        
+        return l_lay;
+    }
+
+    function createScoreLayer(wnd, lay){
+        var s_lay = new RFGBasicLayer(wnd, lay);
+        s_lay.width = lay.width;
+        s_lay.height = 40;
+        s_lay.top = 0;
+        s_lay.left = 0;
+        
+        s_lay.font.height = 20;
+        
+        s_lay.hitThreshold = 256;
+        s_lay.visible = true;
+        
+        return s_lay;
+    }
+
+    function createCollisionLayer(wnd, lay, x, y, width, height){
+        var col_lay = new RFGBasicLayer(wnd, lay);
+        col_lay.left = x;
+        col_lay.top = y;
+        col_lay.width  = width;
+        col_lay.height = height;
+        col_lay.fillRect(0, 0, col_lay.width, col_lay.height, 0x7F00FF00);
+        col_lay.bringToFront();
+        col_lay.visible = true;
+        col_lay.hitThreshold = 256;
+
+        return col_lay;
+    }
+    
+    function createFairyAtariLayer(wnd, lay){
+        var a_lay = RFGLayerCreator.createCollisionLayer(wnd, lay, 0, 0, 50, 80);
+        a_lay.setPosCenter();
+        
+        return a_lay;
+    }
+
+    function createReportAtariLayer(wnd, lay){
+        var a_lay = new RFGBasicLayer(wnd, lay);
+        a_lay.width  = a_lay.parent.width  * 0.500;
+        a_lay.height = a_lay.parent.height * 0.333;
+        a_lay.fillRect(0, 0, a_lay.width, a_lay.height, 0x7F00FF00);
+        a_lay.setPosCenter();
+        a_lay.bringToFront();
+        a_lay.visible = true;
+        a_lay.hitThreshold = 256;
+        
+        return a_lay;
+    }
+
+}

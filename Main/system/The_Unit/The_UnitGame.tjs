@@ -1,0 +1,553 @@
+//キー入力に対応するレイヤー
+class MainLayer extends Layer{
+	var owner;
+	function MainLayer(wnd,lay){
+		super.Layer(wnd,lay);
+	}		
+	// キー操作はownerオブジェクトに委譲 
+    function onKeyDown(key, shift, process=true){
+        if (this.owner === void) return;
+        if (typeof this.owner.onKeyDown === 'undefined') return;
+        this.owner.onKeyDown(key, shift, process);
+    }
+	    // キー操作はownerオブジェクトに委譲 
+    function onKeyUp(key, shift, process=true){
+        if (this.owner === void) return;
+        if (typeof this.owner.onKeyUp === 'undefined') return;
+        this.owner.onKeyUp(key, shift, process);
+    }    
+    
+};
+
+
+class The_UnitGame{
+	var player;
+	var unitManeger;
+	var timer;
+	var mainlay;
+	var gameclear_lay;
+	var gameover_lay;
+	var notenough_unit_lay;
+	var drop_requnit_lay;
+	
+	var i;
+	var score;
+	var drop_requnit_f;
+	var endscene_f;
+	function The_UnitGame(wnd, lay){
+		SettingLayer(wnd, lay);
+
+		drop_requnit_f=false;
+		endscene_f=false;
+		
+		timer = new Timer(this, "action");  // タイマーオブジェクトを作ります
+        wnd.add(timer);               // タイマーオブジェクトをウィンドウに管理してもらいます
+        timer.interval = 50;    // イベントの発生間隔を 1000 ミリ秒（＝１秒）に設定します
+        timer.enabled = true;     // タイマーを有効にします
+        wnd.visible = true;  // ウィンドウを表示状態にします
+        
+		player = new Player(wnd,mainlay,this);
+		unitManeger = new UnitManeger(wnd,mainlay,this);
+		score=new Score();
+	}
+	
+	function init(){
+		player.init();
+		unitManeger.init();
+		score.init();
+		drop_requnit_f=false;
+		endscene_f=false;
+		
+		
+		gameclear_lay.visible=false;
+		gameover_lay.visible=false;
+		notenough_unit_lay.visible = false;
+		drop_requnit_lay.visible = false;
+		
+		
+		timer.enabled=true;
+	}
+	
+
+	//自機の移動方向決定
+	function onKeyDown(key, shift, process=true){
+		if(key==VK_X){
+			player.pushRight=true;
+		}
+		if(key==VK_Z){
+			player.pushLeft=true;
+		}
+	}	
+	
+	//自機の停止
+	function onKeyUp(key, shiftr, process=true){
+		if(key==VK_X){
+			player.pushRight=false;
+		}
+		if(key==VK_Z){
+			player.pushLeft=false;
+		}
+		if(key==VK_SPACE && endscene_f){
+			init();
+		}
+	}
+	
+	function SettingLayer(wnd, lay){
+		mainlay = new MainLayer(wnd, lay);
+		mainlay.owner = this;
+		mainlay.width = lay.width;
+		mainlay.height = lay.height;
+		mainlay.focusable = true;
+		mainlay.fillRect(0, 0, mainlay.width, mainlay.height, 0xFF7F7F7F);
+		mainlay.visible=true;
+		mainlay.focus();
+	
+		gameclear_lay = new Layer(wnd,mainlay);
+		gameclear_lay.loadImages("images/GameClear.png");
+		gameclear_lay.setSizeToImageSize();
+		gameclear_lay.visible = false;
+		gameclear_lay.left = (mainlay.width - gameclear_lay.width)/2;
+		gameclear_lay.top = (mainlay.height - gameclear_lay.height)/2;
+		if(gameclear_lay.left<0){
+			gameclear_lay.left=0;
+		}
+		if(gameclear_lay.top<0){
+			gameclear_lay.top=0;
+		}
+		
+		gameover_lay = new Layer(wnd,mainlay);
+		gameover_lay.loadImages("images/gameover.png");
+		gameover_lay.setSizeToImageSize();
+		gameover_lay.visible = false;
+		gameover_lay.left = (mainlay.width - gameover_lay.width)/2;
+		gameover_lay.top = (mainlay.height - gameover_lay.height)/2;
+		if(gameover_lay.left<0){
+			gameover_lay.left=0;
+		}
+		if(gameover_lay.top<0){
+			gameover_lay.top=0;
+		}
+		
+
+		notenough_unit_lay = new Layer(wnd,mainlay);
+		notenough_unit_lay.loadImages("images/NotEnoughUnit.png");
+		notenough_unit_lay.setSizeToImageSize();
+		notenough_unit_lay.visible = false;
+		notenough_unit_lay.left = (mainlay.width - notenough_unit_lay.width)/2;
+		notenough_unit_lay.top = gameover_lay.top + gameover_lay.height + 10;
+		
+		drop_requnit_lay = new Layer(wnd,mainlay);
+		drop_requnit_lay.loadImages("images/DropRequiredUnit.png");
+		drop_requnit_lay.setSizeToImageSize();
+		drop_requnit_lay.visible = false;
+		drop_requnit_lay.left = (mainlay.width - drop_requnit_lay.width)/2;
+		drop_requnit_lay.top = gameover_lay.top + gameover_lay.height + 10;
+	}
+
+
+	function action(ev){
+		if(ev.target == timer){
+			player.move();
+	
+			unitManeger.move();
+			
+			
+			if(unitManeger.unit_sum == unitManeger.unit_index){
+				var j;
+				for(j=0; j<unitManeger.unit_sum; j++){
+					if(unitManeger.unit[j].enable) break;
+				}
+				if(j == unitManeger.unit_sum){
+					Dicision();
+				}
+			}
+
+			//衝突判定
+			for(i=0; i<unitManeger.unit_sum; i++){
+				if(unitManeger.unit[i].enable && isCollision(player.lay , unitManeger.unit[i].lay[unitManeger.unit[i].type])){
+					unitManeger.unit[i].del();
+					score.addScore(unitManeger.unit[i].type);
+				}
+			}
+			
+		}
+	}
+
+	function isCollision(lay1,lay2){
+		var left1 = lay1.left;
+		var right1 = left1 + lay1.width;
+		var top1 = lay1.top;
+		var bottom1 = top1 + lay1.height;
+		
+		var left2 = lay2.left;
+		var right2 = left2 + lay2.width;
+		var top2 = lay2.top;
+		var bottom2 = top2 + lay2.height;
+	
+		if(left1<right2 && left2<right1 &&
+		   top1<bottom2 && top2<bottom1){
+			return true;
+		}
+		return false;
+	}
+	
+	function Dicision(){
+		if(score.normalunit_score >= unitManeger.deadline){
+			GameClear();
+		}else{
+			GameOver();
+		}
+	}
+	
+	function GameClear(){
+		gameclear_lay.visible=true;
+		endscene_f=true;false;
+		timer.enabled=false;
+	}
+	
+	function GameOver(){
+		gameover_lay.visible=true;
+		if(drop_requnit_f){
+			drop_requnit_lay.visible=true;
+		}else{
+			notenough_unit_lay.visible=true;
+		}
+		unitManeger.init();
+		timer.enabled=false;
+		endscene_f=true;
+	//	kag.trigger("unitend");
+	}
+	
+	function finalize(){
+		this.timer.enabled = false;
+		invalidate	timer;
+		invalidate	player;
+		invalidate	unitManeger;
+		invalidate	Mainlay;
+	}
+};
+
+
+
+//自機クラス
+class Player{
+	var vx;
+	var lay;
+	var dire;//移動方向
+	var limit_x;//x軸の最大
+	var cnt;
+	var pushRight,pushLeft;
+
+	function Player(wnd,lay,owner){
+		this.owner=owner;
+		vx = 10;
+		dire = 0;
+		pushRight=false;
+		pushLeft=false;
+		limit_x = lay.width;
+		this.lay = new Layer(wnd,lay);
+		this.lay.loadImages("image/player.png");
+		this.lay.setSizeToImageSize();
+		this.lay.visible = true;
+		init();
+	}
+	
+	function init(){
+		//プレイヤーの初期位置
+		this.lay.left = (owner.mainlay.width - this.lay.width) / 2; 
+		this.lay.top = owner.mainlay.height - this.lay.height;
+	}
+	
+	//プレイヤーの横移動
+	function move(){
+		Direction();
+		var left = lay.left + dire * vx;
+		var right = left + lay.width;
+		if(left >= 0 && right <= limit_x){
+			lay.left = left;
+		}
+		
+	}
+	
+	//移動方向決定
+	function Direction(){
+		if(pushRight==pushLeft){
+			dire=0;
+		}else if(pushRight){
+			dire=1;
+		}else{
+			dire=-1;
+		}
+	}
+	
+	function finalaize(){
+		invalidate	lay;
+	}
+};
+
+
+//単位管理クラス
+class UnitManeger{
+	var init_x;				//単位オブジェクトの初期配置のX座標
+	var unit;				//単位配列
+	var unit_fallsum;		//同時に落とせる単位数
+	var unit_sum;			//開講数
+	var req_unit;			//必修単位配列
+	var req_unit_fallsum;	//同時に落とせる必修単位数
+	var owner;				//オーナーオブジェクト
+	var unit_guide;			//落とす時間、場所、種類のデータ
+	var unit_index;			//次に落とす単位オブジェクトのインデックス
+	
+	var wnd_width;	//ウィンドウの横幅
+	var cnt;
+	var deadline;
+	var next_falltime;
+	
+	var notice;
+	
+	function UnitManeger(wnd,lay,owner){
+		FallObject();
+		this.owner=owner;
+		unit =new Array();
+        for(var i=0; i<unit_sum; i++){
+            this.unit[i]=new Unit(wnd,lay,owner);
+        }
+		wnd_width=lay.width;
+		notice=new Notice(wnd, lay, unit_sum);
+		init();
+	}
+	
+	function init(){
+		unit_index=0;
+		cnt=0;
+		notice.init();
+		for(var j=0; j<unit_sum; j++){
+			unit[j].del();
+		}
+		next_falltime=unit_guide[0][0];
+	}
+	
+	
+	function FallObject(){
+		deadline=1;
+		unit_sum = 5;
+		unit_guide = new Array();
+		
+		for(var j=0; j<unit_sum; j++){
+			unit_guide.add(%[]);
+		}
+		
+		//データ入力
+		unit_guide[0] = [2 , 0 , 0];
+		unit_guide[1] = [2 , 1 , 100];
+		unit_guide[2] = [2 , 1 , 200];
+		unit_guide[3] = [2 , 0 , 300];
+		unit_guide[4] = [2 , 1 , 400];
+/*		unit_guide[5] = [2 , 0 , 300];
+		unit_guide[6] = [2 , 0 , 200];
+		unit_guide[7] = [2 , 0 , 100];
+		unit_guide[8] = [2 , 0 , 50];
+		unit_guide[9] = [2 , 0 , 0]; 
+*/		
+	}
+	
+	
+	//一定時間ごとの動作
+	function move(){
+		create();
+		fall();
+	}
+	
+	
+	//一定時間ごとに単位を落とす
+	function create(){
+		cnt++;
+		if(cnt%10==0){
+			next_falltime--;
+			if(unit_index!=unit_sum && next_falltime==0){
+				for(var i=0; i<unit_sum; i++){
+					if(!this.unit[i].enable){
+						this.unit[i].create(unit_guide[unit_index][2],unit_guide[unit_index][1]);
+						unit_index++;
+						notice.decrement();
+						notice.update();
+						if(unit_index!=unit_sum)
+							next_falltime=unit_guide[unit_index][0];
+						break;
+					}
+				}
+			}
+		}
+	}
+	
+	
+	//単位の落下処理
+	function fall(){
+		for(var i=0; i<unit_sum; i++){
+			if(this.unit[i].enable){
+				unit[i].fall();
+			}
+		}
+	}
+	
+	function finalize(){
+		for(var i=0; i<=unit_sum; i++){
+			invalidate unit[i];
+		}
+	}
+
+};
+
+
+//単位クラス
+class Unit{
+	var vy;
+	var lay;//通常単位、必修単位レイヤ
+	var enable;
+	var wnd_height;
+	var owner;
+	var type;	//必修単位であるなら１
+	
+	function Unit(wnd , lay , owner){
+		this.owner=owner;
+		var img_pass=["image/unit.png","image/req_unit.png"];
+		vy=10;
+		type=0;
+		wnd_height=lay.height;
+		this.lay = new Array();
+	
+		for(var i=0; i<=1; i++){
+			this.lay[i] = new Layer(wnd,lay);
+			this.lay[i].loadImages(img_pass[i]);
+			this.lay[i].setSizeToImageSize();
+			this.lay[i].visible=false;
+		}
+		enable=false;
+		
+	}
+	
+	
+	function create(x,type){
+		this.type = type;
+		lay[this.type].left=x;
+		lay[this.type].top=0;
+		lay[this.type].visible=true;
+		enable=true;
+	}
+	
+	function fall(){
+		lay[type].top+=vy;
+		if(lay[type].top>=wnd_height){
+			del();
+			if(type==1){
+				owner.drop_requnit_f=true;
+				owner.GameOver();
+			}
+			
+		}
+	}
+	
+	function del(){
+		owner.drop_requnit_f=false;
+		lay[type].visible=false;
+		enable=false;
+	}
+	
+	function finalize(){
+		for(var i=0; i<=1; i++){
+			invalidate lay[i];
+		}
+	}
+
+};
+
+
+
+class Notice{
+	var offred_unit_lay;
+	var num1_lay;
+	var num10_lay;
+	var offredunit_sum;
+	var unit_sum;
+	var num_height;
+	function Notice(wnd, lay, unit_sum){
+		this.unit_sum=unit_sum;
+		
+		
+		offred_unit_lay = new Layer(wnd, lay);
+		offred_unit_lay.loadImages("image/OffredUnit.png");
+		offred_unit_lay.setSizeToImageSize();
+		offred_unit_lay.top = 10;
+		offred_unit_lay.left = lay.width - offred_unit_lay.width - 64;
+		offred_unit_lay.visible=true;
+		offred_unit_lay.bringToFront();
+		
+		num10_lay = new Layer(wnd, lay);
+		num10_lay.loadImages("image/Number.png");
+		num10_lay.setSizeToImageSize();
+		num10_lay.top = 10;
+		num10_lay.left = offred_unit_lay.left + offred_unit_lay.width + 8;
+		num_height = num10_lay.height/10;																//
+		
+		num10_lay.setSize(16, num_height);
+		num10_lay.visible=true;
+		num10_lay.bringToFront();
+		
+		num1_lay = new Layer(wnd, lay);
+		num1_lay.loadImages("image/Number.png");
+		num1_lay.setSizeToImageSize();
+		num1_lay.top = 10;
+		num1_lay.left = num10_lay.left + num10_lay.width + 8;
+		
+		num1_lay.setSize(16, num_height);
+		num1_lay.visible=true;
+		num1_lay.bringToFront();
+		
+		init();
+	}
+	
+	function init(){
+		offredunit_sum=unit_sum;
+		update();
+	}
+	
+	function decrement(){
+		offredunit_sum--;
+	}
+	function update(){
+	
+		var num1 = offredunit_sum%10;
+		var num10 = (offredunit_sum - num1)/10;
+		
+		num1_lay.imageTop=-1 * num1 * num_height;
+		num10_lay.imageTop=-1 * num10 * num_height;
+	
+	}
+	
+}
+
+
+
+class Score{
+	var normalunit_score;
+	var requnit_score;
+	
+	function score(){
+		init();
+	}
+	
+	function init(){
+		normalunit_score = 0;
+		requnit_score = 0;
+	}
+	
+	function addScore(type){
+		if(type == 0){
+			normalunit_score++;
+		}else{
+			requnit_score++;
+		}
+	}
+}
+
+
